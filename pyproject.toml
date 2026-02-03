@@ -1,0 +1,27 @@
+[project]
+name = "Super-Duper-Secret"
+version = "1.0.0"
+description = "A simple password manager"
+requires-python = ">=3.13, <3.14"
+dependencies = [
+    "PyQt6",
+    "PyQt6-Qt6",
+    "pyqtdarktheme",
+    "PyQt6_sip",
+]
+
+# 'wheel' is a standard of python distribution that pre-packages compiled code.
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+sds = "src.main:main"
+
+# Instruct builder as to which files/folders belong in final application.
+[tool.setuptools]
+packages = ["src"]
+
+# Instruct builder as to which other files/folders belong in final application.
+[tool.setuptools.package-data]
+"*" = ["assets/*", "data/*"]

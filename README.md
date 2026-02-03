@@ -1,6 +1,5 @@
-# SDS
-(Super Duper Secret)
-
+# SDS (Super Duper Secret)
 
 An undergrad project to create a desktop password manager.
+
 

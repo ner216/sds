@@ -1,38 +1,48 @@
-from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLineEdit, QPushButton, QLabel
-from PyQt6.QtGui import QPixmap
-from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLineEdit, QPushButton, QLabel, QStackedWidget
+
+
+from ui.master_login_widget import MasterLoginWidget
+from ui.setup_widget import SetupWidget
+from ui.password_list_widget import PasswordListWidget
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
-        self.setWindowTitle("Super Duper Secret")
-        self.setMinimumSize(350, 250)
 
-        # Central Widget
-        central_widget = QWidget()
-        self.setCentralWidget(central_widget)
-        layout = QVBoxLayout(central_widget)
-        layout.setSpacing(15)
-        layout.setContentsMargins(30, 30, 30, 30)
+        self.stack = QStackedWidget()
+        self.setCentralWidget(self.stack)
 
-        self.logo_label = QLabel()
-        pixmap = QPixmap("assets/main-icon-blue.png")
-        scaled_pixmap = pixmap.scaled(120, 120, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
-        self.logo_label.setPixmap(scaled_pixmap)
-        self.logo_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(self.logo_label)
+        self.setMinimumSize(450, 350)
 
-        # UI Elements
-        self.label = QLabel("Enter Master Password")
-        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.setup_screen = SetupWidget(on_success=self.go_to_password_view)
+        self.master_login = MasterLoginWidget(on_success=self.go_to_password_view)
+        self.password_view = PasswordListWidget(on_logout=self.go_to_login)
 
-        self.password_input = QLineEdit()
-        self.password_input.setPlaceholderText("Password")
-        self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
+        self.stack.addWidget(self.setup_screen)
+        self.stack.addWidget(self.master_login)
+        self.stack.addWidget(self.password_view)
 
-        self.login_button = QPushButton("Unlock")
+        if self.master_login_exists():
+            self.go_to_login()
+        else:
+            self.go_to_setup()
 
-        # Add to layout
-        layout.addWidget(self.label)
-        layout.addWidget(self.password_input)
-        layout.addWidget(self.login_button)
+    # Logic to check if an account is already set up.
+    def master_login_exists(self) -> bool:
+        #if database file -> True
+        #else -> False
+
+        return True
+
+    def go_to_setup(self):
+        self.stack.setCurrentIndex(0)
+        self.setWindowTitle("Super Duper Secret - Setup")
+
+    def go_to_login(self):
+        self.stack.setCurrentIndex(1)
+        self.setWindowTitle("Super Duper Secret - Login")
+    
+    def go_to_password_view(self):
+        self.stack.setCurrentIndex(2)
+        self.setWindowTitle("Super Duper Secret - Passwords")
+        

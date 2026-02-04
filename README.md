@@ -1,6 +1,6 @@
 # SDS (Super Duper Secret)
 
-A simple cross-platform password manager. This project currently supports Windows and Debian based Linux distrobutions.
+A simple cross-platform password manager. This project currently supports Windows as well as Debian based Linux distrobutions.
 
 ### Install:
 

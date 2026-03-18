@@ -2,7 +2,7 @@
 name = "Super-Duper-Secret"
 version = "1.0.0"
 description = "A simple password manager"
-requires-python = ">=3.13, <3.14"
+requires-python = ">=3.13"
 dependencies = [
     "PyQt6",
     "PyQt6-Qt6",

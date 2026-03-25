@@ -28,7 +28,7 @@ Install using the latest release package from the 'releases' section.
 - `src/` Contains source code for the project.
     - `src/core/` Contains the source code for core functionality such as encryption/hashing.
     - `src/db/` Contains the source code for the database.
-    - `src/ui/` Contains the source code for the GUI and CLI.
+    - `src/ui/` Contains the source code for the GUI.
     - `src/main/` Is the primary entry point (file that is executed to start the application).
 
 

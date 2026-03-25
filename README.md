@@ -4,7 +4,7 @@
 
 Install using the latest release package from the 'releases' section.
 
-### Development Setup:
+### Run Project in a Development Environment:
 
 1. Your Python version must be `>=3.13.0`
 2. Set up virtual environment(Inside the project directory): 

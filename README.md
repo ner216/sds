@@ -14,10 +14,10 @@ Install using the latest release package from the 'releases' section.
     - Linux: `. .venv/bin/activate`
     - Windows: `.\.venv\Scripts\activate`
 4. Setup package and dependencies: 
-    - Linux: `.venv/bin/pip install -e .`
+    - Linux: `pip install -e .`
     - Windows: `pip install -e .`
 5. Run the project: 
-    - Linux: `.venv/bin/python src/main.py` 
+    - Linux: `python src/main.py` 
     - Windows: `python src\main.py`
     
 ### Project Map:

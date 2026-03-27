@@ -17,7 +17,7 @@ class MainWindow(QMainWindow):
         self.stack = QStackedWidget()
         self.setCentralWidget(self.stack)
 
-        self.setMinimumSize(350, 250)
+        self.setMinimumSize(450, 250)
 
         # Initial page to show on startup
         self.startup_screen = StartupWidget(on_unlock=self.go_to_login, on_new=self.go_to_new_safe, on_verify=self.go_to_verify_file)

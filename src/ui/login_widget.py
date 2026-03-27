@@ -32,7 +32,7 @@ class LoginWidget(QWidget):
 
         # Password field
         self.password_input = QLineEdit()
-        self.password_input.setPlaceholderText("Master Password")
+        self.password_input.setPlaceholderText("Password")
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
 
         # Action Buttons

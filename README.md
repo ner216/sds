@@ -23,11 +23,8 @@ Install using the latest release package from the 'releases' section.
 ### Project Map:
 
 - `pyproject.toml` Contains metadata such as dependencies for the project.
-- `data/` Contains the database files.
-- `assets/` Contains icons and other non-source-code files.
 - `src/` Contains source code for the project.
     - `src/core/` Contains the source code for core functionality such as encryption/hashing.
-    - `src/db/` Contains the source code for the database.
     - `src/ui/` Contains the source code for the GUI.
     - `src/main.py` Is the primary entry point (file that is executed to start the application).
 

@@ -1,5 +1,9 @@
 # SDS (Super Duper Secret)
 
+| | |
+| :---: | :---: |
+| <img src="assets/startup.png" width="300"> | <img src="assets/safe.png" width="300"> |
+
 ### Install:
 
 Install using the latest release package from the 'releases' section.

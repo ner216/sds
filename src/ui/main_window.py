@@ -1,9 +1,14 @@
-from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLineEdit, QPushButton, QLabel, QStackedWidget
+import time
 
+from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLineEdit, QPushButton, QLabel, QStackedWidget, QMessageBox
 
-from ui.master_login_widget import MasterLoginWidget
-from ui.setup_widget import SetupWidget
+from ui.verify_file_widget import VerifyFileWidget
+from ui.startup_widget import StartupWidget
+from ui.login_widget import LoginWidget
+from ui.new_safe_widget import NewSafeWidget
 from ui.password_list_widget import PasswordListWidget
+
+from core.database import PasswordDB
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -12,37 +17,69 @@ class MainWindow(QMainWindow):
         self.stack = QStackedWidget()
         self.setCentralWidget(self.stack)
 
-        self.setMinimumSize(450, 350)
+        self.setMinimumSize(350, 250)
 
-        self.setup_screen = SetupWidget(on_success=self.go_to_password_view)
-        self.master_login = MasterLoginWidget(on_success=self.go_to_password_view)
-        self.password_view = PasswordListWidget(on_logout=self.go_to_login)
+        # Initial page to show on startup
+        self.startup_screen = StartupWidget(on_unlock=self.go_to_login, on_new=self.go_to_new_safe, on_verify=self.go_to_verify_file)
 
-        self.stack.addWidget(self.setup_screen)
-        self.stack.addWidget(self.master_login)
-        self.stack.addWidget(self.password_view)
+        # Verify file page
+        self.verify_file = VerifyFileWidget()
+        self.verify_file.back_requested.connect(self.go_to_startup)
+        
+        # New safe page
+        self.new_safe = NewSafeWidget()
+        self.new_safe.back_requested.connect(self.go_to_startup)
+        self.new_safe.create_safe.connect(self.handle_enter_safe)
 
-        if self.master_login_exists():
-            self.go_to_login()
-        else:
-            self.go_to_setup()
+        # Login page
+        self.login = LoginWidget()
+        self.login.back_requested.connect(self.go_to_startup)
+        self.login.decrypt_safe.connect(self.handle_enter_safe)
 
-    # Logic to check if an account is already set up.
-    def master_login_exists(self) -> bool:
-        #if database file -> True
-        #else -> False
+        self.stack.addWidget(self.verify_file)
+        self.stack.addWidget(self.startup_screen)
+        self.stack.addWidget(self.new_safe)
+        self.stack.addWidget(self.login)
 
-        return True
+        # Start the initial GUI window (startup)
+        self.go_to_startup()
 
-    def go_to_setup(self):
-        self.stack.setCurrentIndex(0)
-        self.setWindowTitle("Super Duper Secret - Setup")
+    def handle_enter_safe(self, db_file_path: str, passphrase: str):
+        try:
+            db = PasswordDB(db_file_path, passphrase)
+            self.password_view = PasswordListWidget(db)
+            self.password_view.back_requested.connect(self.go_to_startup)
+            
+            self.stack.addWidget(self.password_view)
+            self.stack.setCurrentWidget(self.password_view)
+            self.setWindowTitle("Super Duper Secret - Passwords")
+        except Exception:
+            self.show_error_message("Invalid Login", "Password is wrong or database file is not valid!\n Wait 5 seconds to try again.")
+
+    def go_to_verify_file(self):
+        self.stack.setCurrentWidget(self.verify_file)
+        self.setWindowTitle("Super Duper Secret - Verify")
+
+    def go_to_startup(self):
+        self.stack.setCurrentWidget(self.startup_screen)
+        self.setWindowTitle("Super Duper Secret")
+
+    def go_to_new_safe(self):
+        self.stack.setCurrentWidget(self.new_safe)
+        self.setWindowTitle("Super Duper Secret - New")
 
     def go_to_login(self):
-        self.stack.setCurrentIndex(1)
+        self.stack.setCurrentWidget(self.login)
         self.setWindowTitle("Super Duper Secret - Login")
-    
-    def go_to_password_view(self):
-        self.stack.setCurrentIndex(2)
-        self.setWindowTitle("Super Duper Secret - Passwords")
+
+    def show_error_message(self, title, message):
+        msg = QMessageBox(self)
+        msg.setIcon(QMessageBox.Icon.Critical) # Shows the red "X" icon
+        msg.setWindowTitle(title)
+        msg.setText(message)
+        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+        msg.exec() # This blocks the app until 'Ok' is clicked
+        time.sleep(5)
+        
+        
         

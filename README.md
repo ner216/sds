@@ -29,5 +29,13 @@ Install using the latest release package from the 'releases' section.
     - `src/main.py` Is the primary entry point (file that is executed to start the application).
 
 
+### To-Do:
+
+- Add logic for generating/comparing file hashes.
+- Add logic for password strength rating.
+    - Add GUI elements for password strength rating.
+- Clean-up password cool-down implementation.
+- Refactor and clean codebase.
+
 
 

@@ -1,6 +1,6 @@
 # SDS (Super Duper Secret)
 
-| | |
+| Startup Page | Safe Page |
 | :---: | :---: |
 | <img src="assets/startup.png" width="300"> | <img src="assets/safe.png" width="300"> |
 
@@ -27,6 +27,7 @@ Install using the latest release package from the 'releases' section.
 ### Project Map:
 
 - `pyproject.toml` Contains metadata such as dependencies for the project.
+- `assets/` Contains non-source-code files such as images for documentation.
 - `src/` Contains source code for the project.
     - `src/core/` Contains the source code for core functionality such as encryption/hashing.
     - `src/ui/` Contains the source code for the GUI.

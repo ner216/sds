@@ -7,8 +7,10 @@ import bcrypt
 import os
 import hashlib as stdlib_hashlib
 
-class Hash(object):
-    def get_hashed_password(self, password: str) -> str:
+class Hash():
+
+    @staticmethod
+    def get_hashed_password(password: str) -> str:
         """
         Hash a password using bcrypt with salt.
         
@@ -22,7 +24,8 @@ class Hash(object):
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
         return hashed_password.decode('utf-8')
 
-    def derive_key(self, password: str) -> bytes:
+    @staticmethod
+    def derive_key(password: str) -> bytes:
         """
         Derive a fixed 256-bit key from a plain text password.
 

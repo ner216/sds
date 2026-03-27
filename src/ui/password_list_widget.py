@@ -1,10 +1,15 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QPushButton, QFrame, QLabel, QDialog, QLineEdit, QFormLayout, QDialogButtonBox, QHBoxLayout
-from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QPushButton, QFrame, QLabel, QDialog, QLineEdit, QFormLayout, QDialogButtonBox, QHBoxLayout, QStyle
+from PyQt6.QtCore import Qt, pyqtSignal
 
 class PasswordListWidget(QWidget):
-    def __init__(self, on_logout):
+
+    back_requested = pyqtSignal()
+
+    def __init__(self, db):
         super(PasswordListWidget, self).__init__()
         self.layout = QVBoxLayout(self)
+        
+        self.db = db
         
         # Scroll Area Setup
         self.scroll = QScrollArea()
@@ -21,21 +26,11 @@ class PasswordListWidget(QWidget):
         self.add_entry_button.clicked.connect(self.add_entry_dialog)
         self.layout.addWidget(self.add_entry_button)
         
-        self.logout_button = QPushButton("Lock \U0001F512")
-        self.logout_button.clicked.connect(on_logout)
-        self.layout.addWidget(self.logout_button)
+        self.back_button = QPushButton("Lock")
+        self.back_button.clicked.connect(self.emit_back)        
+        self.layout.addWidget(self.back_button)
 
         self.refresh_list()
-
-    def get_entries(self) -> dict:
-        # Add logic for retrieving password entries from database
-
-        mock_data = [
-            {"id": 1, "site": "GitHub", "user": "coder1", "pass": "git_pass"},
-            {"id": 2, "site": "Reddit", "user": "user_123", "pass": "reddit_secret"}
-        ]
-
-        return mock_data
 
     def refresh_list(self):
         # Clear the current list UI
@@ -45,7 +40,7 @@ class PasswordListWidget(QWidget):
                 child.widget().deleteLater()
         
         # Add a row for each entry
-        for item in self.get_entries():
+        for item in self.db.get_entries():
             row = PasswordRowWidget(
                 item["id"], item["site"], item["user"], item["pass"], 
                 on_delete=self.delete_entry
@@ -53,7 +48,7 @@ class PasswordListWidget(QWidget):
             self.scroll_layout.addWidget(row)
 
     def delete_entry(self, entry_id):
-        # Add logic for deleting an entry from the database
+        self.db.delete_entry(entry_id)
 
         self.refresh_list()
 
@@ -63,10 +58,13 @@ class PasswordListWidget(QWidget):
         if dialog.exec() == QDialog.DialogCode.Accepted:
             new_data = dialog.get_data()
 
-            if new_data["site"] and new_data["pass"]:
-                # Add logic for adding password to the database
+            if new_data["site"] and new_data["pass"] and new_data["user"]:
+                self.db.add_entry(new_data["site"], new_data["user"], new_data["pass"])
 
                 self.refresh_list()
+
+    def emit_back(self):
+        self.back_requested.emit()
 
 
 class PasswordRowWidget(QWidget):
@@ -88,12 +86,12 @@ class PasswordRowWidget(QWidget):
         layout.addWidget(self.password_field)
         
         # Action Buttons
-        self.toggle_visibility_button = QPushButton('\U0001F441')
-        self.toggle_visibility_button.setFixedWidth(30)
+        self.toggle_visibility_button = QPushButton()
+        self.toggle_visibility_button.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogContentsView))
         self.toggle_visibility_button.clicked.connect(self.toggle_password)
         
-        self.delete_button = QPushButton('\U0001F5D1')
-        self.delete_button.setStyleSheet("color: #ff4444;")
+        self.delete_button = QPushButton()
+        self.delete_button.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_TrashIcon))
         self.delete_button.clicked.connect(lambda: on_delete(self.entry_id))
         
         layout.addWidget(self.toggle_visibility_button)

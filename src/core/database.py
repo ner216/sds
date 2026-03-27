@@ -7,16 +7,18 @@ import os
 from pathlib import Path
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
+from core.hash_logic import Hash
+
 class PasswordDB:
-    def __init__(self, db_file_path: str, encryption_key: bytes = None):
-        self.db_file = db_file_path
-        self.encryption_key = encryption_key
+    def __init__(self, db_file_path: str, passphrase: str):
+        self.db_file = Path(db_file_path)
+        self.encryption_key = Hash.derive_key(passphrase)
+        self.entries = []
 
         self.load_db()
 
-    def set_encryption_key(self, key: bytes):
-        self.encryption_key = key
-        self.load_db()
+    def get_encryption_key(self):
+        return self.encryption_key
 
     def load_db(self):
         self.entries = []
@@ -37,7 +39,7 @@ class PasswordDB:
                 # fallback for non-encrypted source (legacy)
                 self.entries = json.loads(file_bytes.decode('utf-8'))
         except Exception as e:
-            print(f"Error loading password DB: {e}")
+            raise Exception("Invalid password or file!")
             self.entries = []
 
     def save_db(self):
@@ -70,4 +72,3 @@ class PasswordDB:
     def delete_entry(self, entry_id):
         self.entries = [entry for entry in self.entries if entry.get('id') != entry_id]
         self.save_db()
-

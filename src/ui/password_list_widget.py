@@ -8,6 +8,7 @@ class PasswordListWidget(QWidget):
     def __init__(self, db):
         super(PasswordListWidget, self).__init__()
         self.layout = QVBoxLayout(self)
+        layout.setContentsMargins(20, 20, 20, 20)
         
         self.db = db
         
@@ -27,8 +28,9 @@ class PasswordListWidget(QWidget):
         self.layout.addWidget(self.add_entry_button)
         
         self.back_button = QPushButton("Lock")
+        self.back_button.setFixedWidth(100)
         self.back_button.clicked.connect(self.emit_back)        
-        self.layout.addWidget(self.back_button)
+        self.layout.addWidget(self.back_button, alignment=Qt.AlignmentFlag.AlignHCenter)
 
         self.refresh_list()
 

@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QPushButton, QHBoxLayout, QFileDialog, QStyle
-from PyQt6.QtCore import pyqtSignal, QTimer
+from PyQt6.QtCore import pyqtSignal, QTimer, Qt
 
 import time
 
@@ -23,7 +23,7 @@ class LoginWidget(QWidget):
         # Base layout (Only base layout can be initialized with self)
         layout = QVBoxLayout(self)
         layout.setSpacing(15)
-        layout.setContentsMargins(30, 30, 30, 30)
+        layout.setContentsMargins(20, 20, 20, 20)
 
         # File Selection Row
         file_layout = QHBoxLayout()
@@ -56,17 +56,19 @@ class LoginWidget(QWidget):
 
         # Login button
         self.login_button = QPushButton("Unlock")
+        self.login_button.setFixedHeight(40)
         self.login_button.clicked.connect(self.emit_unlock)
 
         # Back button
         self.back_button = QPushButton("Back")
+        self.back_button.setFixedWidth(100)
         self.back_button.clicked.connect(self.emit_back)
 
         # Add to layout
         layout.addLayout(file_layout)
         layout.addLayout(password_row)
         layout.addWidget(self.login_button)
-        layout.addWidget(self.back_button)
+        layout.addWidget(self.back_button, alignment=Qt.AlignmentFlag.AlignHCenter)
 
     def toggle_password(self):
         if self.password_input.echoMode() == QLineEdit.EchoMode.Password:

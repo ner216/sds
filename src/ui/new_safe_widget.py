@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QPushButton, QHBoxLayout, QFileDialog, QStyle
-from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtCore import pyqtSignal, Qt
 
 from core.database import PasswordDB
 
@@ -15,6 +15,7 @@ class NewSafeWidget(QWidget):
         self.specified_file_path = None
 
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(20, 20, 20, 20)
 
         # File Selection Row
         file_layout = QHBoxLayout()
@@ -47,17 +48,19 @@ class NewSafeWidget(QWidget):
 
         # Setup button
         self.setup_button = QPushButton("Setup")
+        self.setup_button.setFixedHeight(40)
         self.setup_button.clicked.connect(self.setup)
 
         # Back button
         self.back_button = QPushButton("Back")
+        self.back_button.setFixedWidth(100)
         self.back_button.clicked.connect(self.emit_back)
 
         # Add elements to page
         layout.addLayout(file_layout)
         layout.addLayout(password_row)
         layout.addWidget(self.setup_button)
-        layout.addWidget(self.back_button)
+        layout.addWidget(self.back_button, alignment=Qt.AlignmentFlag.AlignHCenter)
 
     def toggle_password(self):
         if self.password_input.echoMode() == QLineEdit.EchoMode.Password:

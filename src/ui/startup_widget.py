@@ -17,15 +17,17 @@ class StartupWidget(QWidget):
         # Central Widget
         layout = QVBoxLayout(self)
         layout.setSpacing(15)
-        layout.setContentsMargins(30, 30, 30, 30)
+        layout.setContentsMargins(20, 20, 20, 20)
 
         self.label = QLabel("<h2>Super Duper Secret</h2>")
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.unlock_button = QPushButton("Unlock Safe")
+        self.unlock_button.setFixedHeight(40)
         self.unlock_button.clicked.connect(self.clicked_unlock_button)
 
         self.new_safe_button = QPushButton("New Safe")
+        self.new_safe_button.setFixedHeight(40)
         self.new_safe_button.clicked.connect(self.clicked_new_safe_button)
 
         self.verify_file_button = QPushButton("Verify File")

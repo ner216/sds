@@ -10,7 +10,7 @@ class VerifyFileWidget(QWidget):
 
         layout = QVBoxLayout(self)
         layout.setSpacing(15)
-        layout.setContentsMargins(30, 30, 30, 30)
+        layout.setContentsMargins(20, 20, 20, 20)
 
         # UI Elements
         self.label = QLabel("<h2>Verify a File</h2>")
@@ -33,9 +33,11 @@ class VerifyFileWidget(QWidget):
         self.known_hash_input.setEchoMode(QLineEdit.EchoMode.Password)
 
         self.verify_button = QPushButton("Verify")
+        self.verify_button.setFixedHeight(40)
         self.verify_button.clicked.connect(self.clicked_verify)
 
         self.back_button = QPushButton("Back")
+        self.back_button.setFixedWidth(100)
         self.back_button.clicked.connect(self.emit_back)
 
         # Add to layout
@@ -43,7 +45,7 @@ class VerifyFileWidget(QWidget):
         layout.addLayout(file_layout)
         layout.addWidget(self.known_hash_input)
         layout.addWidget(self.verify_button)
-        layout.addWidget(self.back_button)
+        layout.addWidget(self.back_button, alignment=Qt.AlignmentFlag.AlignHCenter)
 
     def open_file_dialog(self):
         # Filters for .json files but allows "All Files" too

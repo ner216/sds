@@ -1,6 +1,4 @@
-import time
-
-from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLineEdit, QPushButton, QLabel, QStackedWidget, QMessageBox
+from PyQt6.QtWidgets import QMainWindow, QStackedWidget, QMessageBox
 
 from ui.verify_file_widget import VerifyFileWidget
 from ui.startup_widget import StartupWidget
@@ -9,6 +7,7 @@ from ui.new_safe_widget import NewSafeWidget
 from ui.password_list_widget import PasswordListWidget
 
 from core.database import PasswordDB
+import time
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -54,7 +53,14 @@ class MainWindow(QMainWindow):
             self.stack.setCurrentWidget(self.password_view)
             self.setWindowTitle("Super Duper Secret - Passwords")
         except Exception:
-            self.show_error_message("Invalid Login", "Password is wrong or database file is not valid!\n Wait 5 seconds to try again.")
+            self.login.failed_attempts += 1
+            if self.login.failed_attempts >= 3:
+                # Set lockout for 30 seconds
+                self.login.lockout_end_time = time.time() + 15
+                self.login.login_button.setEnabled(False)
+                self.login.cooldown_timer.start(1000)
+            
+            self.show_error_message("Invalid Login", "Password is wrong or database file is not valid!")
 
     def go_to_verify_file(self):
         self.stack.setCurrentWidget(self.verify_file)
@@ -79,7 +85,6 @@ class MainWindow(QMainWindow):
         msg.setText(message)
         msg.setStandardButtons(QMessageBox.StandardButton.Ok)
         msg.exec() # This blocks the app until 'Ok' is clicked
-        time.sleep(5)
         
         
         

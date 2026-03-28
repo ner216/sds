@@ -1,9 +1,11 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QPushButton, QLabel, QHBoxLayout, QFileDialog, QStyle
-from PyQt6.QtGui import QPixmap
-from PyQt6.QtCore import pyqtSignal, Qt
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QPushButton, QHBoxLayout, QFileDialog, QStyle
+from PyQt6.QtCore import pyqtSignal, QTimer
+
+import time
 
 class LoginWidget(QWidget):
 
+    # Signal members to alert main_window.py of an action
     back_requested = pyqtSignal()
     decrypt_safe = pyqtSignal(str, str)
 
@@ -12,6 +14,13 @@ class LoginWidget(QWidget):
 
         self.specified_file_path = None
 
+        # Password cool down variables
+        self.failed_attempts = 0
+        self.lockout_end_time = 0
+        self.cooldown_timer = QTimer()
+        self.cooldown_timer.timeout.connect(self.update_ui_lockout)
+
+        # Base layout (Only base layout can be initialized with self)
         layout = QVBoxLayout(self)
         layout.setSpacing(15)
         layout.setContentsMargins(30, 30, 30, 30)
@@ -28,9 +37,10 @@ class LoginWidget(QWidget):
         file_layout.addWidget(self.file_input)
         file_layout.addWidget(self.browse_button)
 
-        self.password_row = QHBoxLayout(self)
+        # Password row layout
+        password_row = QHBoxLayout()
 
-        # Password field
+        # Password input
         self.password_input = QLineEdit()
         self.password_input.setPlaceholderText("Password")
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
@@ -40,8 +50,9 @@ class LoginWidget(QWidget):
         self.toggle_visibility_button.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogContentsView))
         self.toggle_visibility_button.clicked.connect(self.toggle_password)
 
-        self.password_row.addWidget(self.password_input)
-        self.password_row.addWidget(self.toggle_visibility_button)
+        # Add elements to password row
+        password_row.addWidget(self.password_input)
+        password_row.addWidget(self.toggle_visibility_button)
 
         # Login button
         self.login_button = QPushButton("Unlock")
@@ -53,7 +64,7 @@ class LoginWidget(QWidget):
 
         # Add to layout
         layout.addLayout(file_layout)
-        layout.addLayout(self.password_row)
+        layout.addLayout(password_row)
         layout.addWidget(self.login_button)
         layout.addWidget(self.back_button)
 
@@ -76,7 +87,23 @@ class LoginWidget(QWidget):
             self.specified_file_path = file_path
 
     def emit_unlock(self):
+        current_time = time.time()
+
+        if current_time < self.lockout_end_time:
+            remaining = int(self.lockout_end_time - current_time)
+            self.login_button.setText(f"Locked! Wait {remaining}s")
+            return
+
         self.decrypt_safe.emit(self.specified_file_path, self.password_input.text())
+
+    def update_ui_lockout(self):
+        remaining = int(self.lockout_end_time - time.time())
+        if remaining > 0:
+            self.login_button.setText(f"Locked ({remaining}s)")
+        else:
+            self.cooldown_timer.stop()
+            self.login_button.setEnabled(True)
+            self.login_button.setText("Unlock")
 
     def emit_back(self):
         self.back_requested.emit()

@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QPushButton, QFrame, QLabel, QDialog, QLineEdit, QFormLayout, QDialogButtonBox, QHBoxLayout, QStyle
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QPushButton, QLabel, QDialog, QLineEdit, QFormLayout, QDialogButtonBox, QHBoxLayout, QStyle
 from PyQt6.QtCore import Qt, pyqtSignal
 
 class PasswordListWidget(QWidget):
@@ -65,7 +65,6 @@ class PasswordListWidget(QWidget):
 
     def emit_back(self):
         self.back_requested.emit()
-
 
 class PasswordRowWidget(QWidget):
     def __init__(self, entry_id, site, user, password, on_delete):

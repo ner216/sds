@@ -1,5 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QPushButton, QLabel, QStyle
-from PyQt6.QtGui import QPixmap
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel, QStyle
 from PyQt6.QtCore import Qt
 
 class StartupWidget(QWidget):
@@ -39,17 +38,11 @@ class StartupWidget(QWidget):
         layout.addWidget(self.new_safe_button)
         layout.addWidget(self.verify_file_button)
 
-    def clicked_unlock_button(self):
-        # Get entered password with: self.password_input.text()
-        
+    def clicked_unlock_button(self):        
         self.on_unlock()
 
-    def clicked_new_safe_button(self):
-        # Get entered password with: self.password_input.text()
-        
+    def clicked_new_safe_button(self):        
         self.on_new()
 
     def clicked_verify_file_button(self):
-        # Get entered password with: self.password_input.text()
-        
         self.on_verify()

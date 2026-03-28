@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QPushButton, QLabel, QHBoxLayout, QFileDialog, QStyle
-from PyQt6.QtCore import pyqtSignal, Qt
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QPushButton, QHBoxLayout, QFileDialog, QStyle
+from PyQt6.QtCore import pyqtSignal
 
 from core.database import PasswordDB
 
@@ -11,6 +11,7 @@ class NewSafeWidget(QWidget):
     def __init__(self):
         super(NewSafeWidget, self).__init__()
 
+        # Location entered by the user for new safe
         self.specified_file_path = None
 
         layout = QVBoxLayout(self)
@@ -27,7 +28,8 @@ class NewSafeWidget(QWidget):
         file_layout.addWidget(self.file_input)
         file_layout.addWidget(self.browse_button)
 
-        self.password_row = QHBoxLayout(self)
+        # Password row layout
+        password_row = QHBoxLayout()
 
         # Password input
         self.password_input = QLineEdit()
@@ -39,8 +41,9 @@ class NewSafeWidget(QWidget):
         self.toggle_visibility_button.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogContentsView))
         self.toggle_visibility_button.clicked.connect(self.toggle_password)
 
-        self.password_row.addWidget(self.password_input)
-        self.password_row.addWidget(self.toggle_visibility_button)
+        # Add elements to password row
+        password_row.addWidget(self.password_input)
+        password_row.addWidget(self.toggle_visibility_button)
 
         # Setup button
         self.setup_button = QPushButton("Setup")
@@ -52,7 +55,7 @@ class NewSafeWidget(QWidget):
 
         # Add elements to page
         layout.addLayout(file_layout)
-        layout.addLayout(self.password_row)
+        layout.addLayout(password_row)
         layout.addWidget(self.setup_button)
         layout.addWidget(self.back_button)
 

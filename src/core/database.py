@@ -35,9 +35,13 @@ class PasswordDB:
                 aesgcm = AESGCM(self.encryption_key)
                 clear = aesgcm.decrypt(nonce, ciphertext, None)
                 self.entries = json.loads(clear.decode('utf-8'))
+
+                print(f"[INFO] Database decrypted and loaded successfully\n Path: {self.db_file}")
             else:
                 # fallback for non-encrypted source (legacy)
                 self.entries = json.loads(file_bytes.decode('utf-8'))
+
+                print(f"[INFO] Unencrypted database loaded successfully\n Path: {self.db_file}")
         except Exception as e:
             raise Exception("Invalid password or file!")
             self.entries = []

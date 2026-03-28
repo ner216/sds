@@ -56,11 +56,9 @@ class VerifyFileWidget(QWidget):
         if file_path:
             self.file_input.setText(file_path)
 
-    def clicked_verify(self):
-        # Get entered password with: self.password_input.text()
+    def clicked_verify(self):        
+        pass
         
-        self.on_success()
-
     def emit_back(self):
         self.back_requested.emit()
     

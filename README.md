@@ -39,8 +39,8 @@ Install using the latest release package from the 'releases' section.
 - Add logic for generating/comparing file hashes.
 - Add logic for password strength rating.
     - Add GUI elements for password strength rating.
-- Clean-up password cool-down implementation.
-- Refactor and clean codebase.
+
+
 
 
 

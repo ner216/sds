@@ -10,6 +10,7 @@ dependencies = [
     "PyQt6_sip",
     "cryptography",
     "bcrypt",
+    "pyinstaller",
 ]
 
 # 'wheel' is a standard of python distribution that pre-packages compiled code.

@@ -7,6 +7,7 @@ from ui.new_safe_widget import NewSafeWidget
 from ui.password_list_widget import PasswordListWidget
 
 from core.database import PasswordDB
+from core.hash_logic import Hash
 import time
 
 class MainWindow(QMainWindow):
@@ -24,6 +25,7 @@ class MainWindow(QMainWindow):
         # Verify file page
         self.verify_file = VerifyFileWidget()
         self.verify_file.back_requested.connect(self.go_to_startup)
+        self.verify_file.verify_file.connect(self.handle_verify_file)
         
         # New safe page
         self.new_safe = NewSafeWidget()
@@ -60,7 +62,15 @@ class MainWindow(QMainWindow):
                 self.login.login_button.setEnabled(False)
                 self.login.cooldown_timer.start(1000)
             
-            self.show_error_message("Invalid Login", "Password is wrong or database file is not valid!")
+            QMessageBox.information(self, "Invalid Login", "Password is wrong or database file is not valid!")
+
+    def handle_verify_file(self, file_path: str, known_hash: str):
+        calculated_hash = Hash.get_file_hash(file_path)
+        verified = (calculated_hash == known_hash)
+        if verified == True:
+            QMessageBox.information(self, "Success", f"File verified successfully!\nOriginal: {known_hash}\nCalculated: {calculated_hash}")
+        else:
+            QMessageBox.information(self, "Error", f"File hashes do not match; the file may be compromised!\nOriginal: {known_hash}\nCalculated: {calculated_hash}")
 
     def go_to_verify_file(self):
         self.stack.setCurrentWidget(self.verify_file)
@@ -77,14 +87,3 @@ class MainWindow(QMainWindow):
     def go_to_login(self):
         self.stack.setCurrentWidget(self.login)
         self.setWindowTitle("Super Duper Secret - Login")
-
-    def show_error_message(self, title, message):
-        msg = QMessageBox(self)
-        msg.setIcon(QMessageBox.Icon.Critical) # Shows the red "X" icon
-        msg.setWindowTitle(title)
-        msg.setText(message)
-        msg.setStandardButtons(QMessageBox.StandardButton.Ok)
-        msg.exec() # This blocks the app until 'Ok' is clicked
-        
-        
-        

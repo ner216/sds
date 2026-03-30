@@ -4,6 +4,11 @@
 | :---: | :---: |
 | <img src="assets/startup.png" width="300"> | <img src="assets/safe.png" width="300"> |
 
+### About:
+This application was created for an undergraduate university security class project.
+
+SDS is a simple password manager app written in Python and uses pyqt6 for it's GUI framework. This app secures collections of passwords in encrypted password files. The app is also able to verify files using their official hash provided by the developer.
+
 ### Install:
 
 Install using the latest release executable from the 'releases' section [here](https://github.com/ner216/sds/releases/tag/general).

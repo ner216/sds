@@ -24,7 +24,7 @@ Install using the latest release executable from the 'releases' section.
     - Linux: `python src/main.py` 
     - Windows: `python src\main.py`
 6. You can also compile the project to a binary executable:
-    - `pyinstaller --onefile src/main.py`
+    - `pyinstaller --onefile --windowed src/main.py`
     
 ### Project Map:
 

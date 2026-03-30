@@ -1,12 +1,12 @@
 # SDS (Super Duper Secret)
 
-| Startup Page | Safe Page |
+| Startup | Passwords |
 | :---: | :---: |
 | <img src="assets/startup.png" width="300"> | <img src="assets/safe.png" width="300"> |
 
 ### Install:
 
-Install using the latest release package from the 'releases' section.
+Install using the latest release executable from the 'releases' section.
 
 ### Run Project in a Development Environment:
 
@@ -34,13 +34,6 @@ Install using the latest release package from the 'releases' section.
     - `src/core/` Contains the source code for core functionality such as encryption/hashing.
     - `src/ui/` Contains the source code for the GUI.
     - `src/main.py` Is the primary entry point (file that is executed to start the application).
-
-
-### To-Do:
-
-- Add logic for generating/comparing file hashes.
-- Add logic for password strength rating.
-    - Add GUI elements for password strength rating.
 
 
 

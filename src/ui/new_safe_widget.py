@@ -1,5 +1,7 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QPushButton, QHBoxLayout, QFileDialog, QStyle
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QPushButton, QHBoxLayout, QFileDialog, QStyle, QProgressBar, QLabel
 from PyQt6.QtCore import pyqtSignal, Qt
+from PyQt6.QtGui import QFont
+import re
 
 from core.database import PasswordDB
 
@@ -31,20 +33,34 @@ class NewSafeWidget(QWidget):
 
         # Password row layout
         password_row = QHBoxLayout()
-
         # Password input
         self.password_input = QLineEdit()
         self.password_input.setPlaceholderText("Password")
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
-
         # Action Buttons
         self.toggle_visibility_button = QPushButton()
         self.toggle_visibility_button.setIcon(self.style().standardIcon(QStyle.StandardPixmap.SP_FileDialogContentsView))
         self.toggle_visibility_button.clicked.connect(self.toggle_password)
-
         # Add elements to password row
         password_row.addWidget(self.password_input)
         password_row.addWidget(self.toggle_visibility_button)
+
+        # Strength Row
+        strength_layout = QHBoxLayout()
+        # Strength label
+        self.strength_label = QLabel("Password Strength:")
+        strength_layout.addWidget(self.strength_label)
+        # Strength Bar
+        self.strength_bar = QProgressBar()
+        self.strength_bar.setFixedHeight(15)
+        self.strength_bar.setTextVisible(False)
+        self.strength_bar.setRange(0, 4)     # 0 (Empty) to 4 (Strong)
+        self.strength_bar.setValue(0)
+        strength_layout.addWidget(self.strength_bar)
+        #self.strength_bar.setStyleSheet("QProgressBar::chunk { background-color: gray; }")
+
+        # Connect the password input to a checking function
+        self.password_input.textChanged.connect(self.update_strength)
 
         # Setup button
         self.setup_button = QPushButton("Setup")
@@ -59,6 +75,7 @@ class NewSafeWidget(QWidget):
         # Add elements to page
         layout.addLayout(file_layout)
         layout.addLayout(password_row)
+        layout.addLayout(strength_layout)
         layout.addWidget(self.setup_button)
         layout.addWidget(self.back_button, alignment=Qt.AlignmentFlag.AlignHCenter)
 
@@ -82,6 +99,20 @@ class NewSafeWidget(QWidget):
                 file_path += ".json"
             self.file_input.setText(file_path)
             self.specified_file_path = file_path
+
+    def update_strength(self, password):
+        score = 0
+        if not password:
+            self.strength_bar.setValue(0)
+            return
+
+        # Strength Criteria
+        if len(password) >= 8: score += 1
+        if any(char.isdigit() for char in password): score += 1
+        if any(char.isupper() for char in password): score += 1
+        if re.search(r"[ !@#$%^&*(),.?\":{}|<>]", password): score += 1
+
+        self.strength_bar.setValue(score)
 
     def setup(self):
         self.create_safe.emit(self.specified_file_path, self.password_input.text())

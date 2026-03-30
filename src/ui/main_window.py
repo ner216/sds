@@ -30,7 +30,7 @@ class MainWindow(QMainWindow):
         # New safe page
         self.new_safe = NewSafeWidget()
         self.new_safe.back_requested.connect(self.go_to_startup)
-        self.new_safe.create_safe.connect(self.handle_enter_safe)
+        self.new_safe.create_safe.connect(self.handle_create_safe)
 
         # Login page
         self.login = LoginWidget()
@@ -48,13 +48,15 @@ class MainWindow(QMainWindow):
     def handle_enter_safe(self, db_file_path: str, passphrase: str):
         try:
             db = PasswordDB(db_file_path, passphrase)
+            db.load_db()
             self.password_view = PasswordListWidget(db)
             self.password_view.back_requested.connect(self.go_to_startup)
             
             self.stack.addWidget(self.password_view)
             self.stack.setCurrentWidget(self.password_view)
             self.setWindowTitle("Super Duper Secret - Passwords")
-        except Exception:
+        except Exception as e:
+            print(f"Error: Login failed!\n {e}")
             self.login.failed_attempts += 1
             if self.login.failed_attempts >= 3:
                 # Set lockout for 30 seconds
@@ -63,6 +65,19 @@ class MainWindow(QMainWindow):
                 self.login.cooldown_timer.start(1000)
             
             QMessageBox.information(self, "Invalid Login", "Password is wrong or database file is not valid!")
+
+    def handle_create_safe(self, db_file_path: str, passphrase: str):
+        try:
+            db = PasswordDB(db_file_path, passphrase)
+            self.password_view = PasswordListWidget(db)
+            self.password_view.back_requested.connect(self.go_to_startup)
+            
+            self.stack.addWidget(self.password_view)
+            self.stack.setCurrentWidget(self.password_view)
+            self.setWindowTitle("Super Duper Secret - Passwords")
+        except Exception as e:
+            print(f"Error: Unable to create new safe!\n {e}")
+            QMessageBox.information(self, "Error", "Unable to create new safe!")
 
     def handle_verify_file(self, file_path: str, known_hash: str):
         calculated_hash = Hash.get_file_hash(file_path)

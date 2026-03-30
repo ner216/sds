@@ -8,7 +8,7 @@ class PasswordListWidget(QWidget):
     def __init__(self, db):
         super(PasswordListWidget, self).__init__()
         self.layout = QVBoxLayout(self)
-        layout.setContentsMargins(20, 20, 20, 20)
+        self.layout.setContentsMargins(20, 20, 20, 20)
         
         self.db = db
         

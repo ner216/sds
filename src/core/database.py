@@ -15,8 +15,6 @@ class PasswordDB:
         self.encryption_key = Hash.derive_key(passphrase)
         self.entries = []
 
-        self.load_db()
-
     def get_encryption_key(self):
         return self.encryption_key
 

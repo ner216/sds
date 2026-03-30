@@ -6,7 +6,7 @@
 
 ### Install:
 
-Install using the latest release executable from the 'releases' section.
+Install using the latest release executable from the 'releases' section [here](https://github.com/ner216/sds/releases/tag/general).
 
 ### Run Project in a Development Environment:
 

@@ -1,4 +1,6 @@
 from PyQt6.QtWidgets import QMainWindow, QStackedWidget, QMessageBox
+from PyQt6.QtGui import QAction
+from qt_material import QtStyleTools, apply_stylesheet
 
 from ui.verify_file_widget import VerifyFileWidget
 from ui.startup_widget import StartupWidget
@@ -10,9 +12,50 @@ from core.database import PasswordDB
 from core.hash_logic import Hash
 import time
 
-class MainWindow(QMainWindow):
+class MainWindow(QMainWindow, QtStyleTools):
     def __init__(self):
         super(MainWindow, self).__init__()
+
+        #Color Settings
+        menu_bar = self.menuBar()
+        theme_menu = menu_bar.addMenu("Themes")
+
+        light_mode = theme_menu.addMenu("Light Mode")
+        light_mode_colors=[ ("Red", 'light_red.xml'),
+                            ("Orange", 'light_amber.xml'),
+                            ("Yellow", 'light_yellow.xml'),
+                            ("Green", 'light_lightgreen.xml'),
+                            ("Teal", 'light_teal.xml'),
+                            ("Blue", 'light_blue.xml'),
+                            ("Light Blue", 'light_cyan.xml'),
+                            ("Cyan", 'light_cyan_500.xml'),
+                            ("Purple", 'light_purple.xml'),
+                            ("Pink", 'light_pink.xml')
+                            ]
+        
+        for color_name, theme in light_mode_colors:
+            action = QAction(color_name, self)
+            action.triggered.connect(lambda checked, t=theme: self.change_theme(t))
+            light_mode.addAction(action)
+    
+
+        dark_mode = theme_menu.addMenu("Dark Mode")
+        dark_mode_colors=[ ("Red", 'dark_red.xml'),
+                            ("Orange", 'dark_amber.xml'),
+                            ("Yellow", 'dark_yellow.xml'),
+                            ("Green", 'dark_lightgreen.xml'),
+                            ("Teal", 'dark_teal.xml'),
+                            ("Blue", 'dark_blue.xml'),
+                            ("Light Blue", 'dark_cyan.xml'),
+                            ("Cyan", 'dark_cyan_500.xml'),
+                            ("Purple", 'dark_purple.xml'),
+                            ("Pink", 'dark_pink.xml')
+                            ]
+        
+        for color_name, theme in dark_mode_colors:
+            action = QAction(color_name, self)
+            action.triggered.connect(lambda checked, t=theme: self.change_theme(t))
+            dark_mode.addAction(action)
 
         self.stack = QStackedWidget()
         self.setCentralWidget(self.stack)
@@ -103,3 +146,7 @@ class MainWindow(QMainWindow):
     def go_to_login(self):
         self.stack.setCurrentWidget(self.login)
         self.setWindowTitle("Super Duper Secret - Login")
+
+    def change_theme(self, color):
+        self.setStyleSheet("")
+        apply_stylesheet(self,theme=color)

@@ -10,7 +10,7 @@ class HandleConfig():
         config_dir = user_config_dir(app_name, app_author)
 
         # Ensure config directories exist
-        os.makedires(config_dir, exist_ok=True)
+        os.makedirs(config_dir, exist_ok=True)
 
         config_path = os.path.join(config_dir, "settings.json")
 
@@ -18,7 +18,7 @@ class HandleConfig():
 
     @staticmethod
     def save(data: dict) -> None:
-        config_path = _initialize()["config_path"]
+        config_path = HandleConfig._initialize()["config_path"]
 
         try:
             with open(config_path, "w") as f:
@@ -31,7 +31,7 @@ class HandleConfig():
     # Returns the config as a dictionary if the config file exists
     @staticmethod
     def load() -> dict:
-        config_path = _initialize()["config_path"]
+        config_path = HandleConfig._initialize()["config_path"]
         
         if not os.path.exists(config_path):
             return {}
@@ -42,7 +42,7 @@ class HandleConfig():
 
     @staticmethod
     def delete_config():
-        config_dir = _initialize()["config_dir"]
+        config_dir = HandleConfig._initialize()["config_dir"]
 
         print(f"[WARNING] This will delete everything within {config_dir}")
         authorize = input("Proceed? (y/N) > ")

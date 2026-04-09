@@ -38,6 +38,7 @@ Install using the latest release executable from the 'releases' section [here](h
 - `src/` Contains source code for the project.
     - `src/core/` Contains the source code for core functionality such as encryption/hashing.
     - `src/ui/` Contains the source code for the GUI.
+    - `src/utils/` Contains code used to perform external operations like manage config files.
     - `src/main.py` Is the primary entry point (file that is executed to start the application).
 
 

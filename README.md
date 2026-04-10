@@ -3,6 +3,8 @@
 | Startup | Passwords |
 | :---: | :---: |
 | <img src="assets/startup.png" width="300"> | <img src="assets/safe.png" width="300"> |
+| CLI | Get Password |
+| <img src="assets/sds_cli.png" width="300"> | <img src="assets/sds_get.png" width="300"> |
 
 ### About:
 This application was created for an undergraduate university security class project.

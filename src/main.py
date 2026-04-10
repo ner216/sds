@@ -33,7 +33,7 @@ def main():
     elif args.interactive == True:
         CLI(default_safe_path).interactive_mode()
     elif args.delete_password:
-        CLI(default_safe_path).delete_password()
+        CLI(default_safe_path).delete_password(args.delete_password)
     elif args.get_password:
         CLI(default_safe_path).get_password(args.get_password)
 

@@ -21,28 +21,28 @@ class CLI():
 
         print("Add password details:")
         
-        app = input("Program > ")
+        name = input("Entry name > ")
         user = input("Username > ")
         passwd = input("Password > ")
 
         try:
-            self.db.add_entry(app, user, passwd)
-            print(f"[INFO] Added password for {site}!")
+            self.db.add_entry(name, user, passwd)
+            print(f"[INFO] Added password for {name}!")
         except Exception as e:
-            print(f"[ERROR] Unable to save new password for {site}!\n Err: {e}")
+            print(f"[ERROR] Unable to save new password for {name}!\n Err: {e}")
 
-    def delete_password(self, username_or_id: str):
+    def delete_password(self, name_or_id: str):
         if self.db.password_locked: return
 
         entry_to_delete = None
 
         for entry in self.db.get_entries():
-            if not username.isdigit():
-                if entry["site"].lower() == username.lower():
+            if not name_or_id.isdigit():
+                if entry["site"].lower() == name_or_id.lower():
                     entry_to_delete = entry
                     break
             else:
-                if str(entry["id"]) == username:
+                if str(entry["id"]) == name_or_id:
                     entry_to_delete = entry
                     break
 
@@ -50,27 +50,27 @@ class CLI():
             self.db.delete_entry(entry["id"])
             print(f"[INFO] Deleted Password for {entry["site"]}")
         else:
-            print(f"[INFO] Database does not contain an entry for {username_or_id}")
+            print(f"[INFO] Database does not contain an entry for {name_or_id}")
 
-    def get_password(self, username: str):
+    def get_password(self, name_or_id: str):
         if self.db.password_locked: return
         
         entry_found = False
 
         for entry in self.db.get_entries():
-            if not username.isdigit():
-                if entry["site"].lower() == username.lower():
+            if not name_or_id.isdigit():
+                if entry["site"].lower() == name_or_id.lower():
                     print(f"Password for {entry["site"]} > '{entry["pass"]}'")
                     entry_found = True
                     break
             else:
-                if str(entry["id"]) == username:
+                if str(entry["id"]) == name_or_id:
                     print(f"Password for {entry["site"]} > '{entry["pass"]}'")
                     entry_found = True
                     break
 
         if entry_found == False:
-            print(f"[INFO] Database does not contain an entry for {username}")
+            print(f"[INFO] Database does not contain an entry for {name_or_id}")
 
     def list_entries(self):
         if self.db.password_locked: return

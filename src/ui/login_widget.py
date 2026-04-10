@@ -3,6 +3,8 @@ from PyQt6.QtCore import pyqtSignal, QTimer, Qt
 
 import time
 
+from utils.config import Config
+
 class LoginWidget(QWidget):
 
     # Signal members to alert main_window.py of an action
@@ -12,7 +14,10 @@ class LoginWidget(QWidget):
     def __init__(self):
         super(LoginWidget, self).__init__()
 
-        self.specified_file_path = None
+        # Retrieve the default path to save the database in the app data folder
+        config = Config()
+        self.default_safe_path = config.get_default_safe_path()
+        self.specified_file_path = self.default_safe_path
 
         # Password cool down variables
         self.failed_attempts = 0
@@ -28,7 +33,7 @@ class LoginWidget(QWidget):
         # File Selection Row
         file_layout = QHBoxLayout()
         self.file_input = QLineEdit()
-        self.file_input.setPlaceholderText("Select Database File (.json)")
+        self.file_input.setText(self.default_safe_path)
         self.file_input.setReadOnly(True) # Keep it read-only so they must use the button
         
         self.browse_button = QPushButton("Browse")
@@ -81,7 +86,7 @@ class LoginWidget(QWidget):
         file_path, _ = QFileDialog.getOpenFileName(
             self, 
             "Open Encrypted Database", 
-            "", 
+            self.default_safe_path, 
             "JSON Files (*.json);;All Files (*)"
         )
         if file_path:

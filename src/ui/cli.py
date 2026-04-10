@@ -20,9 +20,14 @@ class CLI():
         entry_found = False
 
         for entry in self.db.get_entries():
-            if entry["site"].lower() == username.lower():
-                print(f"Password for {entry["site"]} > '{entry["pass"]}'")
-                entry_found = True
+            if not username.isdigit():
+                if entry["site"].lower() == username.lower():
+                    print(f"Password for {entry["site"]} > '{entry["pass"]}'")
+                    entry_found = True
+            else:
+                if str(entry["id"]) == username:
+                    print(f"Password for {entry["site"]} > '{entry["pass"]}'")
+                    entry_found = True
 
         if entry_found == False:
             print(f"[INFO] Database does not contain an entry for {username}")

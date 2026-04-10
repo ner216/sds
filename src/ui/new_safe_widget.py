@@ -4,7 +4,7 @@ from PyQt6.QtGui import QFont
 import re
 
 from core.database import PasswordDB
-from utils.config import Config
+from utils.config import SafeConfig
 
 class NewSafeWidget(QWidget):
 
@@ -15,8 +15,7 @@ class NewSafeWidget(QWidget):
         super(NewSafeWidget, self).__init__()
 
         # Retrieve the default path to save the database in the app data folder
-        config = Config()
-        self.default_safe_path = config.get_default_safe_path()
+        self.default_safe_path = SafeConfig().get_default_safe_path()
         # Location entered by the user for new safe
         self.specified_file_path = self.default_safe_path
 

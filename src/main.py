@@ -4,13 +4,12 @@ from ui.main_window import MainWindow
 import qdarktheme
 import argparse
 
-from utils.config import Config
+from utils.config import SafeConfig
 from ui.cli import CLI
 
 def main():
     # Initialize config object for managing program settings
-    config = Config()
-    default_safe_path = config.get_default_safe_path()
+    default_safe_path = SafeConfig().get_default_safe_path()
 
     parser = argparse.ArgumentParser(description="A simple password manager.")
     parser.add_argument("-d", "--delete-config", action="store_true", help="Delete all config data created by SDS")
@@ -25,7 +24,7 @@ def main():
     elif args.list == True:
         CLI(default_safe_path).list_entries()
     elif args.delete_config == True:
-        config.delete_all()
+        SafeConfig().delete_all()
     elif args.get_password:
         CLI(default_safe_path).get_password(args.get_password)
 

@@ -3,7 +3,7 @@ from PyQt6.QtCore import pyqtSignal, QTimer, Qt
 
 import time
 
-from utils.config import Config
+from utils.config import SafeConfig
 
 class LoginWidget(QWidget):
 
@@ -15,8 +15,7 @@ class LoginWidget(QWidget):
         super(LoginWidget, self).__init__()
 
         # Retrieve the default path to save the database in the app data folder
-        config = Config()
-        self.default_safe_path = config.get_default_safe_path()
+        self.default_safe_path = SafeConfig().get_default_safe_path()
         self.specified_file_path = self.default_safe_path
 
         # Password cool down variables

@@ -28,7 +28,7 @@ class PasswordListWidget(QWidget):
         self.layout.addWidget(self.add_entry_button)
         
         self.back_button = QPushButton("Lock")
-        self.back_button.setFixedWidth(100)
+        self.back_button.setFixedWidth(250)
         self.back_button.clicked.connect(self.emit_back)        
         self.layout.addWidget(self.back_button, alignment=Qt.AlignmentFlag.AlignHCenter)
 

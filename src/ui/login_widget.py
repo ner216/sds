@@ -65,7 +65,7 @@ class LoginWidget(QWidget):
 
         # Back button
         self.back_button = QPushButton("Back")
-        self.back_button.setFixedWidth(100)
+        self.back_button.setFixedWidth(250)
         self.back_button.clicked.connect(self.emit_back)
 
         # Add to layout

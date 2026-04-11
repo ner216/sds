@@ -1,9 +1,9 @@
 import sys
 from PyQt6.QtWidgets import QApplication
 from ui.main_window import MainWindow
-import qdarktheme
 import argparse
 
+from ui.style import Style  # Style sheets are stored in this file
 from utils.config import SafeConfig
 from ui.cli import CLI
 
@@ -39,8 +39,7 @@ def main():
 
 def start_gui():
     app = QApplication(sys.argv)
-    stylesheet = qdarktheme.load_stylesheet("dark")
-    app.setStyleSheet(stylesheet)
+    app.setStyleSheet(Style.FUSION_DARK_STYLE)
 
     window = MainWindow()
     window.show()

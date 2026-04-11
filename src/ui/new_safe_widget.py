@@ -20,7 +20,10 @@ class NewSafeWidget(QWidget):
         self.specified_file_path = self.default_safe_path
 
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setContentsMargins(10, 10, 10, 10)
+
+        self.title_label = QLabel("<h2>Create A New Safe</h2>")
+        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # File Selection Row
         file_layout = QHBoxLayout()
@@ -76,6 +79,7 @@ class NewSafeWidget(QWidget):
         self.back_button.clicked.connect(self.emit_back)
 
         # Add elements to page
+        layout.addWidget(self.title_label)
         layout.addLayout(file_layout)
         layout.addLayout(password_row)
         layout.addLayout(strength_layout)

@@ -14,7 +14,7 @@ class VerifyFileWidget(QWidget):
 
         layout = QVBoxLayout(self)
         layout.setSpacing(15)
-        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setContentsMargins(10, 10, 10, 10)
 
         # UI Elements
         self.label = QLabel("<h2>Verify a File</h2>")

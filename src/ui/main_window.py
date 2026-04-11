@@ -1,4 +1,5 @@
 from PyQt6.QtWidgets import QMainWindow, QStackedWidget, QMessageBox
+from PyQt6.QtCore import Qt
 
 from ui.verify_file_widget import VerifyFileWidget
 from ui.startup_widget import StartupWidget
@@ -17,7 +18,10 @@ class MainWindow(QMainWindow):
         self.stack = QStackedWidget()
         self.setCentralWidget(self.stack)
 
-        self.setMinimumSize(450, 250)
+        self.setFixedSize(500, 350)
+
+        # Use this command instead if a resizable window is desired
+        #self.setMinimumSize(500, 300)
 
         # Initial page to show on startup
         self.startup_screen = StartupWidget(on_unlock=self.go_to_login, on_new=self.go_to_new_safe, on_verify=self.go_to_verify_file)
@@ -103,3 +107,14 @@ class MainWindow(QMainWindow):
     def go_to_login(self):
         self.stack.setCurrentWidget(self.login)
         self.setWindowTitle("Super Duper Secret - Login")
+
+    def keyPressEvent(self, event):
+        pass # Remove this when theme logic is ready
+        # Check if the Alt key was pressed alone
+        if event.key() == Qt.Key.Key_Alt:
+            # Toggle visibility
+            is_visible = self.menu_bar.isVisible()
+            self.menu_bar.setVisible(not is_visible)
+        
+        # Always call the superclass event to keep default behavior intact
+        super().keyPressEvent(event)

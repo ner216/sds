@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QPushButton, QHBoxLayout, QFileDialog, QStyle
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QPushButton, QHBoxLayout, QFileDialog, QStyle, QLabel
 from PyQt6.QtCore import pyqtSignal, QTimer, Qt
 
 import time
@@ -27,7 +27,10 @@ class LoginWidget(QWidget):
         # Base layout (Only base layout can be initialized with self)
         layout = QVBoxLayout(self)
         layout.setSpacing(15)
-        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setContentsMargins(10, 10, 10, 10)
+
+        self.title_label = QLabel("<h2>Unlock Safe</h2>")
+        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # File Selection Row
         file_layout = QHBoxLayout()
@@ -69,6 +72,7 @@ class LoginWidget(QWidget):
         self.back_button.clicked.connect(self.emit_back)
 
         # Add to layout
+        layout.addWidget(self.title_label)
         layout.addLayout(file_layout)
         layout.addLayout(password_row)
         layout.addWidget(self.login_button)

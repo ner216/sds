@@ -20,6 +20,11 @@ class MainWindow(QMainWindow, QtStyleTools):
         menu_bar = self.menuBar()
         theme_menu = menu_bar.addMenu("Themes")
 
+        default_theme = QAction("Default", self)
+        default_theme.triggered.connect(lambda checked: self.change_theme('None'))
+        theme_menu.addAction(default_theme)
+
+
         light_mode = theme_menu.addMenu("Light Mode")
         light_mode_colors=[ ("Red", 'light_red.xml'),
                             ("Orange", 'light_amber.xml'),
@@ -46,8 +51,7 @@ class MainWindow(QMainWindow, QtStyleTools):
                             ("Green", 'dark_lightgreen.xml'),
                             ("Teal", 'dark_teal.xml'),
                             ("Blue", 'dark_blue.xml'),
-                            ("Light Blue", 'dark_cyan.xml'),
-                            ("Cyan", 'dark_cyan_500.xml'),
+                            ("Cyan", 'dark_cyan.xml'),
                             ("Purple", 'dark_purple.xml'),
                             ("Pink", 'dark_pink.xml')
                             ]
@@ -57,10 +61,12 @@ class MainWindow(QMainWindow, QtStyleTools):
             action.triggered.connect(lambda checked, t=theme: self.change_theme(t))
             dark_mode.addAction(action)
 
+
+
         self.stack = QStackedWidget()
         self.setCentralWidget(self.stack)
 
-        self.setMinimumSize(450, 250)
+        self.setMinimumSize(450, 450)
 
         # Initial page to show on startup
         self.startup_screen = StartupWidget(on_unlock=self.go_to_login, on_new=self.go_to_new_safe, on_verify=self.go_to_verify_file)

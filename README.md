@@ -3,15 +3,23 @@
 | Startup | Passwords |
 | :---: | :---: |
 | <img src="assets/startup.png" width="300"> | <img src="assets/safe.png" width="300"> |
+| CLI | Get Password |
+| <img src="assets/sds_cli.png" width="300"> | <img src="assets/sds_get.png" width="300"> |
 
 ### About:
 This application was created for an undergraduate university security class project.
 
-SDS is a simple password manager app written in Python and uses pyqt6 for it's GUI framework. This app secures collections of passwords in encrypted password files. The app is also able to verify files using their official hash provided by the developer.
+SDS is a simple, cross-platform password manager app written in Python. This app secures collections of passwords in encrypted password files.
+
+**Features:**
+- Store and manage passwords inside of encrypted databases.
+- Verify downloaded files using the developer supplied hash.
+- Graphical user interface powered by Qt6.
+- Command line interface for shell based workflows.
 
 ### Install:
 
-Install using the latest release executable from the 'releases' section [here](https://github.com/ner216/sds/releases/tag/general).
+Download the latest release executable from the 'releases' section [here](https://github.com/ner216/sds/releases/tag/general).
 
 ### Run Project in a Development Environment:
 
@@ -37,7 +45,8 @@ Install using the latest release executable from the 'releases' section [here](h
 - `assets/` Contains non-source-code files such as images for documentation.
 - `src/` Contains source code for the project.
     - `src/core/` Contains the source code for core functionality such as encryption/hashing.
-    - `src/ui/` Contains the source code for the GUI.
+    - `src/ui/` Contains the source code for the GUI and CLI.
+    - `src/utils/` Contains code used to perform external operations like manage config files.
     - `src/main.py` Is the primary entry point (file that is executed to start the application).
 
 

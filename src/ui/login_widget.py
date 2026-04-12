@@ -1,7 +1,9 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QPushButton, QHBoxLayout, QFileDialog, QStyle
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QPushButton, QHBoxLayout, QFileDialog, QStyle, QLabel
 from PyQt6.QtCore import pyqtSignal, QTimer, Qt
 
 import time
+
+from utils.config import SafeConfig
 
 class LoginWidget(QWidget):
 
@@ -12,7 +14,9 @@ class LoginWidget(QWidget):
     def __init__(self):
         super(LoginWidget, self).__init__()
 
-        self.specified_file_path = None
+        # Retrieve the default path to save the database in the app data folder
+        self.default_safe_path = SafeConfig().get_default_safe_path()
+        self.specified_file_path = self.default_safe_path
 
         # Password cool down variables
         self.failed_attempts = 0
@@ -23,12 +27,15 @@ class LoginWidget(QWidget):
         # Base layout (Only base layout can be initialized with self)
         layout = QVBoxLayout(self)
         layout.setSpacing(15)
-        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setContentsMargins(10, 10, 10, 10)
+
+        self.title_label = QLabel("<h2>Unlock Safe</h2>")
+        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # File Selection Row
         file_layout = QHBoxLayout()
         self.file_input = QLineEdit()
-        self.file_input.setPlaceholderText("Select Database File (.json)")
+        self.file_input.setText(self.default_safe_path)
         self.file_input.setReadOnly(True) # Keep it read-only so they must use the button
         
         self.browse_button = QPushButton("Browse")
@@ -61,10 +68,11 @@ class LoginWidget(QWidget):
 
         # Back button
         self.back_button = QPushButton("Back")
-        self.back_button.setFixedWidth(100)
+        self.back_button.setFixedWidth(250)
         self.back_button.clicked.connect(self.emit_back)
 
         # Add to layout
+        layout.addWidget(self.title_label)
         layout.addLayout(file_layout)
         layout.addLayout(password_row)
         layout.addWidget(self.login_button)
@@ -81,7 +89,7 @@ class LoginWidget(QWidget):
         file_path, _ = QFileDialog.getOpenFileName(
             self, 
             "Open Encrypted Database", 
-            "", 
+            self.default_safe_path, 
             "JSON Files (*.json);;All Files (*)"
         )
         if file_path:

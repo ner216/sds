@@ -10,9 +10,11 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from core.hash_logic import Hash
 
 class PasswordDB:
-    def __init__(self, db_file_path: str, passphrase: str):
+    def __init__(self, db_file_path: str, passphrase: str, verbose: bool = False):
         self.db_file = Path(db_file_path)
         self.encryption_key = Hash.derive_key(passphrase)
+        self.verbose = verbose
+        self.password_locked = True
         self.entries = []
 
     def get_encryption_key(self):
@@ -34,12 +36,16 @@ class PasswordDB:
                 clear = aesgcm.decrypt(nonce, ciphertext, None)
                 self.entries = json.loads(clear.decode('utf-8'))
 
-                print(f"[INFO] Database decrypted and loaded successfully\n Path: {self.db_file}")
+                self.password_locked = False
+
+                if self.verbose:
+                    print(f"[INFO] Database decrypted and loaded successfully\n Path: {self.db_file}")
             else:
                 # fallback for non-encrypted source (legacy)
                 self.entries = json.loads(file_bytes.decode('utf-8'))
 
-                print(f"[INFO] Unencrypted database loaded successfully\n Path: {self.db_file}")
+                if self.verbose:
+                    print(f"[INFO] Unencrypted database loaded successfully\n Path: {self.db_file}")
         except Exception as e:
             raise Exception("Invalid password or file!")
             self.entries = []

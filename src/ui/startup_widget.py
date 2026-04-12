@@ -8,17 +8,27 @@ class StartupWidget(QWidget):
         self.on_new = on_new
         self.on_verify = on_verify
 
+        # Central Widget
+        layout = QVBoxLayout(self)
+        layout.setSpacing(15)
+        layout.setContentsMargins(10, 10, 10, 10)
+
+        # Tip to get more options
+        self.bar_visibility_label = QLabel("Tip: Press 'alt' to show more config options.")
+        font = self.bar_visibility_label.font()
+        font.setPointSize(9)
+        font.setItalic(True)
+        self.bar_visibility_label.setFont(font)
+        self.bar_visibility_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        # Home page image
         self.image_label = QLabel()
         self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         icon = self.style().standardIcon(QStyle.StandardPixmap.SP_MessageBoxInformation)
         pixmap = icon.pixmap(64, 64)
         self.image_label.setPixmap(pixmap)
 
-        # Central Widget
-        layout = QVBoxLayout(self)
-        layout.setSpacing(15)
-        layout.setContentsMargins(20, 20, 20, 20)
-
+        # Program title
         self.label = QLabel("<h2>Super Duper Secret</h2>")
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
@@ -34,6 +44,7 @@ class StartupWidget(QWidget):
         self.verify_file_button.clicked.connect(self.clicked_verify_file_button)
 
         # Add to layout
+        layout.addWidget(self.bar_visibility_label)
         layout.addWidget(self.image_label)
         layout.addWidget(self.label)
         layout.addWidget(self.unlock_button)

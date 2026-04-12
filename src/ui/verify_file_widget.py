@@ -14,7 +14,7 @@ class VerifyFileWidget(QWidget):
 
         layout = QVBoxLayout(self)
         layout.setSpacing(15)
-        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setContentsMargins(10, 10, 10, 10)
 
         # UI Elements
         self.label = QLabel("<h2>Verify a File</h2>")
@@ -41,7 +41,7 @@ class VerifyFileWidget(QWidget):
         self.verify_button.clicked.connect(self.clicked_verify)
 
         self.back_button = QPushButton("Back")
-        self.back_button.setFixedWidth(100)
+        self.back_button.setFixedWidth(250)
         self.back_button.clicked.connect(self.emit_back)
 
         # Add to layout

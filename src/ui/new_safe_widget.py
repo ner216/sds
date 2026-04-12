@@ -4,6 +4,7 @@ from PyQt6.QtGui import QFont
 import re
 
 from core.database import PasswordDB
+from utils.config import SafeConfig
 
 class NewSafeWidget(QWidget):
 
@@ -13,16 +14,21 @@ class NewSafeWidget(QWidget):
     def __init__(self):
         super(NewSafeWidget, self).__init__()
 
+        # Retrieve the default path to save the database in the app data folder
+        self.default_safe_path = SafeConfig().get_default_safe_path()
         # Location entered by the user for new safe
-        self.specified_file_path = None
+        self.specified_file_path = self.default_safe_path
 
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setContentsMargins(10, 10, 10, 10)
+
+        self.title_label = QLabel("<h2>Create A New Safe</h2>")
+        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # File Selection Row
         file_layout = QHBoxLayout()
         self.file_input = QLineEdit()
-        self.file_input.setPlaceholderText("Select Database File (.json)")
+        self.file_input.setText(self.default_safe_path)
         self.file_input.setReadOnly(True) # Keep it read-only so they must use the button
         
         self.browse_button = QPushButton("Browse")
@@ -69,10 +75,11 @@ class NewSafeWidget(QWidget):
 
         # Back button
         self.back_button = QPushButton("Back")
-        self.back_button.setFixedWidth(100)
+        self.back_button.setFixedWidth(250)
         self.back_button.clicked.connect(self.emit_back)
 
         # Add elements to page
+        layout.addWidget(self.title_label)
         layout.addLayout(file_layout)
         layout.addLayout(password_row)
         layout.addLayout(strength_layout)
@@ -90,7 +97,7 @@ class NewSafeWidget(QWidget):
         file_path, _ = QFileDialog.getSaveFileName(
             self, 
             "Create New Safe", 
-            "", 
+            self.default_safe_path, 
             "JSON Files (*.json)"
         )
         if file_path:

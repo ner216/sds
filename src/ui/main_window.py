@@ -1,4 +1,6 @@
 from PyQt6.QtWidgets import QMainWindow, QStackedWidget, QMessageBox
+from PyQt6.QtGui import QAction
+from qt_material import QtStyleTools, apply_stylesheet
 from PyQt6.QtCore import Qt
 
 from ui.verify_file_widget import VerifyFileWidget
@@ -11,17 +13,61 @@ from core.database import PasswordDB
 from core.hash_logic import Hash
 import time
 
-class MainWindow(QMainWindow):
+class MainWindow(QMainWindow, QtStyleTools):
     def __init__(self):
         super(MainWindow, self).__init__()
+
+        #Color Settings
+        menu_bar = self.menuBar()
+        theme_menu = menu_bar.addMenu("Themes")
+
+        default_theme = QAction("Default", self)
+        default_theme.triggered.connect(lambda checked: self.change_theme('None'))
+        theme_menu.addAction(default_theme)
+
+
+        light_mode = theme_menu.addMenu("Light Mode")
+        light_mode_colors=[ ("Red", 'light_red.xml'),
+                            ("Orange", 'light_amber.xml'),
+                            ("Yellow", 'light_yellow.xml'),
+                            ("Green", 'light_lightgreen.xml'),
+                            ("Teal", 'light_teal.xml'),
+                            ("Blue", 'light_blue.xml'),
+                            ("Light Blue", 'light_cyan.xml'),
+                            ("Cyan", 'light_cyan_500.xml'),
+                            ("Purple", 'light_purple.xml'),
+                            ("Pink", 'light_pink.xml')
+                            ]
+        
+        for color_name, theme in light_mode_colors:
+            action = QAction(color_name, self)
+            action.triggered.connect(lambda checked, t=theme: self.change_theme(t))
+            light_mode.addAction(action)
+    
+
+        dark_mode = theme_menu.addMenu("Dark Mode")
+        dark_mode_colors=[ ("Red", 'dark_red.xml'),
+                            ("Orange", 'dark_amber.xml'),
+                            ("Yellow", 'dark_yellow.xml'),
+                            ("Green", 'dark_lightgreen.xml'),
+                            ("Teal", 'dark_teal.xml'),
+                            ("Blue", 'dark_blue.xml'),
+                            ("Cyan", 'dark_cyan.xml'),
+                            ("Purple", 'dark_purple.xml'),
+                            ("Pink", 'dark_pink.xml')
+                            ]
+        
+        for color_name, theme in dark_mode_colors:
+            action = QAction(color_name, self)
+            action.triggered.connect(lambda checked, t=theme: self.change_theme(t))
+            dark_mode.addAction(action)
+
+
 
         self.stack = QStackedWidget()
         self.setCentralWidget(self.stack)
 
-        self.setFixedSize(500, 350)
-
-        # Use this command instead if a resizable window is desired
-        #self.setMinimumSize(500, 300)
+        self.setMinimumSize(450, 450)
 
         # Initial page to show on startup
         self.startup_screen = StartupWidget(on_unlock=self.go_to_login, on_new=self.go_to_new_safe, on_verify=self.go_to_verify_file)
@@ -108,6 +154,9 @@ class MainWindow(QMainWindow):
         self.stack.setCurrentWidget(self.login)
         self.setWindowTitle("Super Duper Secret - Login")
 
+    def change_theme(self, color):
+        self.setStyleSheet("")
+        apply_stylesheet(self,theme=color)
     def keyPressEvent(self, event):
         pass # Remove this when theme logic is ready
         # Check if the Alt key was pressed alone

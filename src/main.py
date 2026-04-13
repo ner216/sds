@@ -3,7 +3,6 @@ from PyQt6.QtWidgets import QApplication
 from ui.main_window import MainWindow
 import argparse
 
-from ui.style import FUSION_DARK_STYLE, ADWAITA_DARK_STYLE  # Style sheets are stored in this file
 from utils.config import SafeConfig
 from ui.cli import CLI
 
@@ -39,7 +38,6 @@ def main():
 
 def start_gui():
     app = QApplication(sys.argv)
-    #app.setStyleSheet(ADWAITA_DARK_STYLE)
 
     window = MainWindow()
     window.show()

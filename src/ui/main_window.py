@@ -12,7 +12,7 @@ from ui.password_list_widget import PasswordListWidget
 
 from core.database import PasswordDB
 from core.hash_logic import Hash
-from ui.style import FUSION_DARK_STYLE, ADWAITA_DARK_STYLE  # Style sheets are stored in this file
+from ui.style import STYLES
 from utils.config import AppConfig
 import time
 
@@ -80,13 +80,13 @@ class MainWindow(QMainWindow, QtStyleTools):
 
         style_mode = theme_menu.addMenu("Stylesheets")
 
-        STYLE_LIST = [ ("Fusion Dark", FUSION_DARK_STYLE),
-                        ("Adwaita Dark", ADWAITA_DARK_STYLE)
+        STYLE_LIST = [ ("Fusion-Dark", STYLES.get("Fusion-Dark")),
+                        ("Adwaita-Dark", STYLES.get("Adwaita-Dark"))
                     ]
         
         for style_name, theme in STYLE_LIST:
             action = QAction(style_name, self)
-            action.triggered.connect(lambda checked, t=theme: self.change_theme(t, "style"))
+            action.triggered.connect(lambda checked, t=theme: self.change_theme(style_name, "style"))
             style_mode.addAction(action)
 
         self.stack = QStackedWidget()
@@ -188,11 +188,12 @@ class MainWindow(QMainWindow, QtStyleTools):
             self.config.add_or_update_entry(key="preferred_theme_type", value="color")
             self.config.add_or_update_entry(key="color", value=theme)
         elif theme_type == "style":
+            stylesheet = STYLES.get(theme)
             self.app.setStyleSheet("") # Remove stylesheet before changing theme color to avoid crash
             lambda checked: apply_stylesheet(self,theme="None")
             self.config.add_or_update_entry(key="preferred_theme_type", value="style")
             self.config.add_or_update_entry(key="style", value=theme)
-            self.app.setStyleSheet(theme)
+            self.app.setStyleSheet(stylesheet)
         
     # Set initial theme depending on config file
     def set_initial_theme(self):
@@ -203,7 +204,7 @@ class MainWindow(QMainWindow, QtStyleTools):
         elif preferred_theme_type == "color":
             self.change_theme(self.config.get_entry("color"), "color")
         else:
-            self.app.setStyleSheet(ADWAITA_DARK_STYLE)
+            self.app.setStyleSheet(STYLES.get("ADWAITA_DARK_STYLE"))
 
     # Toggle menu bar visibility when the 'alt' key is pressed
     def keyPressEvent(self, event):

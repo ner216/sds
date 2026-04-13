@@ -12,6 +12,7 @@ dependencies = [
     "bcrypt",
     "pyinstaller",
     "platformdirs",
+    "qt_material",
 ]
 
 # 'wheel' is a standard of python distribution that pre-packages compiled code.

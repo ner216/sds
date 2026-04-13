@@ -1,9 +1,8 @@
 import qdarktheme
 
-class Style():
-    FUSION_DARK_STYLE = qdarktheme.load_stylesheet("dark")
+FUSION_DARK_STYLE = qdarktheme.load_stylesheet("dark")
 
-    ADWAITA_DARK_STYLE = """
+ADWAITA_DARK_STYLE = """
     QWidget {
         border: 1px solid #393939;
         border-radius: 10px; 

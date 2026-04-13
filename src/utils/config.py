@@ -1,5 +1,6 @@
 import shutil
 import os
+import json
 from platformdirs import user_config_dir
 
 # A class for accessing base configurations such as the default safe path and removing the app folders.
@@ -66,18 +67,21 @@ class AppConfig(SafeConfig):
     def _load_config(self) -> None:
         if not os.path.exists(self.config_path):
             self.data = {}
-
-        with open(self.config_path, "r") as f:
-            self.data = json.load(f)
+        else:
+            with open(self.config_path, "r") as f:
+                self.data = json.load(f)
 
     # Add an entry or update an existing entry. This automatically updates the config file
-    def add_or_update_entry(key: str, value: str) -> None:
+    def add_or_update_entry(self, key: str, value: str) -> None:
         self.data.update({key: value})
-        self._save()
+        self._save_config()
+
+    def get_entry(self, key: str) -> str:
+        return self.data.get(key)
 
     # Remove an entry in program memory and config file
-    def remove_entry(key: str) -> None:
+    def remove_entry(self, key: str) -> None:
         self.data.pop(key)
-        self._save()
+        self._save_config()
 
 

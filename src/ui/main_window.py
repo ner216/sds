@@ -11,63 +11,84 @@ from ui.password_list_widget import PasswordListWidget
 
 from core.database import PasswordDB
 from core.hash_logic import Hash
+from ui.style import FUSION_DARK_STYLE, ADWAITA_DARK_STYLE  # Style sheets are stored in this file
+from utils.config import AppConfig
 import time
 
 class MainWindow(QMainWindow, QtStyleTools):
     def __init__(self):
         super(MainWindow, self).__init__()
 
-        #Color Settings
-        menu_bar = self.menuBar()
-        theme_menu = menu_bar.addMenu("Themes")
+        self.config = AppConfig()
+        
+        self.set_initial_theme()
+        
+        # Menu Bar
+        self.menu_bar = self.menuBar()
+        self.menu_bar.setVisible(False)
+
+        # Theme menu for bar
+        theme_menu = self.menu_bar.addMenu("Themes")
 
         default_theme = QAction("Default", self)
-        default_theme.triggered.connect(lambda checked: self.change_theme('None'))
+        default_theme.triggered.connect(lambda checked: self.change_color('None'))
         theme_menu.addAction(default_theme)
 
-
         light_mode = theme_menu.addMenu("Light Mode")
-        light_mode_colors=[ ("Red", 'light_red.xml'),
-                            ("Orange", 'light_amber.xml'),
-                            ("Yellow", 'light_yellow.xml'),
-                            ("Green", 'light_lightgreen.xml'),
-                            ("Teal", 'light_teal.xml'),
-                            ("Blue", 'light_blue.xml'),
-                            ("Light Blue", 'light_cyan.xml'),
-                            ("Cyan", 'light_cyan_500.xml'),
-                            ("Purple", 'light_purple.xml'),
-                            ("Pink", 'light_pink.xml')
-                            ]
+
+        LIGHT_STYLE_LIST = [ ("Red", 'light_red.xml'),
+                    ("Orange", 'light_amber.xml'),
+                    ("Yellow", 'light_yellow.xml'),
+                    ("Green", 'light_lightgreen.xml'),
+                    ("Teal", 'light_teal.xml'),
+                    ("Blue", 'light_blue.xml'),
+                    ("Light Blue", 'light_cyan.xml'),
+                    ("Cyan", 'light_cyan_500.xml'),
+                    ("Purple", 'light_purple.xml'),
+                    ("Pink", 'light_pink.xml')
+                    ]
         
-        for color_name, theme in light_mode_colors:
+        for color_name, theme in LIGHT_STYLE_LIST:
             action = QAction(color_name, self)
-            action.triggered.connect(lambda checked, t=theme: self.change_theme(t))
+            action.triggered.connect(lambda checked, t=theme: self.change_color(t))
             light_mode.addAction(action)
     
 
         dark_mode = theme_menu.addMenu("Dark Mode")
-        dark_mode_colors=[ ("Red", 'dark_red.xml'),
-                            ("Orange", 'dark_amber.xml'),
-                            ("Yellow", 'dark_yellow.xml'),
-                            ("Green", 'dark_lightgreen.xml'),
-                            ("Teal", 'dark_teal.xml'),
-                            ("Blue", 'dark_blue.xml'),
-                            ("Cyan", 'dark_cyan.xml'),
-                            ("Purple", 'dark_purple.xml'),
-                            ("Pink", 'dark_pink.xml')
-                            ]
+
+        DARK_STYLE_LIST = [ ("Red", 'dark_red.xml'),
+                    ("Orange", 'dark_amber.xml'),
+                    ("Yellow", 'dark_yellow.xml'),
+                    ("Green", 'dark_lightgreen.xml'),
+                    ("Teal", 'dark_teal.xml'),
+                    ("Blue", 'dark_blue.xml'),
+                    ("Cyan", 'dark_cyan.xml'),
+                    ("Purple", 'dark_purple.xml'),
+                    ("Pink", 'dark_pink.xml'),
+                    ("Fusion Dark", FUSION_DARK_STYLE),
+                    ("Adwaita Dark", ADWAITA_DARK_STYLE)
+                    ]
         
-        for color_name, theme in dark_mode_colors:
+        for color_name, theme in DARK_STYLE_LIST:
             action = QAction(color_name, self)
-            action.triggered.connect(lambda checked, t=theme: self.change_theme(t))
+            action.triggered.connect(lambda checked, t=theme: self.change_color(t))
             dark_mode.addAction(action)
 
+        style_mode = theme_menu.addMenu("Stylesheets")
 
+        STYLE_LIST = [ ("Fusion Dark", FUSION_DARK_STYLE),
+                        ("Adwaita Dark", ADWAITA_DARK_STYLE)
+                    ]
+        
+        for style_name, theme in STYLE_LIST:
+            action = QAction(style_name, self)
+            action.triggered.connect(lambda checked, t=theme: self.change_style(t))
+            style_mode.addAction(action)
 
         self.stack = QStackedWidget()
         self.setCentralWidget(self.stack)
 
-        self.setMinimumSize(450, 450)
+        self.setFixedSize(500, 370)
 
         # Initial page to show on startup
         self.startup_screen = StartupWidget(on_unlock=self.go_to_login, on_new=self.go_to_new_safe, on_verify=self.go_to_verify_file)
@@ -154,11 +175,29 @@ class MainWindow(QMainWindow, QtStyleTools):
         self.stack.setCurrentWidget(self.login)
         self.setWindowTitle("Super Duper Secret - Login")
 
-    def change_theme(self, color):
+    def change_color(self, color):
         self.setStyleSheet("")
         apply_stylesheet(self,theme=color)
+        self.config.add_or_update_entry(key="preferred_theme_type", value="color")
+        self.config.add_or_update_entry(key="color", value=color)
+
+    def change_style(self, style):
+        lambda checked: self.change_color('None')
+        self.setStyleSheet(style)
+        self.config.add_or_update_entry(key="preferred_theme_type", value="style")
+        self.config.add_or_update_entry(key="style", value=style)
+
+    def set_initial_theme(self):
+        preferred_theme_type = self.config.get_entry("preferred_theme_type")
+
+        if preferred_theme_type == "style":
+            self.change_style(self.config.get_entry("style"))
+        elif preferred_theme_type == "color":
+            self.change_color(self.config.get_entry("color"))
+        else:
+            self.setStyleSheet(ADWAITA_DARK_STYLE)
+
     def keyPressEvent(self, event):
-        pass # Remove this when theme logic is ready
         # Check if the Alt key was pressed alone
         if event.key() == Qt.Key.Key_Alt:
             # Toggle visibility

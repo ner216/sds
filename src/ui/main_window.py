@@ -2,6 +2,7 @@ from PyQt6.QtWidgets import QMainWindow, QStackedWidget, QMessageBox
 from PyQt6.QtGui import QAction
 from qt_material import QtStyleTools, apply_stylesheet
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication
 
 from ui.verify_file_widget import VerifyFileWidget
 from ui.startup_widget import StartupWidget
@@ -19,8 +20,13 @@ class MainWindow(QMainWindow, QtStyleTools):
     def __init__(self):
         super(MainWindow, self).__init__()
 
+        # Get the app config settings from the json config file
         self.config = AppConfig()
-        
+
+        # Get the running app instance
+        self.app = QApplication.instance() 
+
+        # Set the theme on first startup intelligently
         self.set_initial_theme()
         
         # Menu Bar
@@ -30,9 +36,10 @@ class MainWindow(QMainWindow, QtStyleTools):
         # Theme menu for bar
         theme_menu = self.menu_bar.addMenu("Themes")
 
-        default_theme = QAction("Default", self)
-        default_theme.triggered.connect(lambda checked: self.change_color('None'))
-        theme_menu.addAction(default_theme)
+        # Default theme option to reset the Theme.
+        #default_theme = QAction("Default", self)
+        #default_theme.triggered.connect(lambda checked: self.change_theme('None', 'color'))
+        #theme_menu.addAction(default_theme)
 
         light_mode = theme_menu.addMenu("Light Mode")
 
@@ -50,10 +57,9 @@ class MainWindow(QMainWindow, QtStyleTools):
         
         for color_name, theme in LIGHT_STYLE_LIST:
             action = QAction(color_name, self)
-            action.triggered.connect(lambda checked, t=theme: self.change_color(t))
+            action.triggered.connect(lambda checked, t=theme: self.change_theme(t, "color"))
             light_mode.addAction(action)
     
-
         dark_mode = theme_menu.addMenu("Dark Mode")
 
         DARK_STYLE_LIST = [ ("Red", 'dark_red.xml'),
@@ -65,13 +71,11 @@ class MainWindow(QMainWindow, QtStyleTools):
                     ("Cyan", 'dark_cyan.xml'),
                     ("Purple", 'dark_purple.xml'),
                     ("Pink", 'dark_pink.xml'),
-                    ("Fusion Dark", FUSION_DARK_STYLE),
-                    ("Adwaita Dark", ADWAITA_DARK_STYLE)
                     ]
         
         for color_name, theme in DARK_STYLE_LIST:
             action = QAction(color_name, self)
-            action.triggered.connect(lambda checked, t=theme: self.change_color(t))
+            action.triggered.connect(lambda checked, t=theme: self.change_theme(t, "color"))
             dark_mode.addAction(action)
 
         style_mode = theme_menu.addMenu("Stylesheets")
@@ -82,7 +86,7 @@ class MainWindow(QMainWindow, QtStyleTools):
         
         for style_name, theme in STYLE_LIST:
             action = QAction(style_name, self)
-            action.triggered.connect(lambda checked, t=theme: self.change_style(t))
+            action.triggered.connect(lambda checked, t=theme: self.change_theme(t, "style"))
             style_mode.addAction(action)
 
         self.stack = QStackedWidget()
@@ -175,28 +179,33 @@ class MainWindow(QMainWindow, QtStyleTools):
         self.stack.setCurrentWidget(self.login)
         self.setWindowTitle("Super Duper Secret - Login")
 
-    def change_color(self, color):
-        self.setStyleSheet("")
-        apply_stylesheet(self,theme=color)
-        self.config.add_or_update_entry(key="preferred_theme_type", value="color")
-        self.config.add_or_update_entry(key="color", value=color)
-
-    def change_style(self, style):
-        lambda checked: self.change_color('None')
-        self.setStyleSheet(style)
-        self.config.add_or_update_entry(key="preferred_theme_type", value="style")
-        self.config.add_or_update_entry(key="style", value=style)
-
+    # Takes the theme stylesheet as string
+    # Takes theme type as string (can be 'color' or 'style')
+    def change_theme(self, theme: str, theme_type: str):        
+        if theme_type == "color":
+            self.app.setStyleSheet("") # Use app rather than self to apply theme application wide
+            apply_stylesheet(self.app, theme=theme)
+            self.config.add_or_update_entry(key="preferred_theme_type", value="color")
+            self.config.add_or_update_entry(key="color", value=theme)
+        elif theme_type == "style":
+            self.app.setStyleSheet("") # Remove stylesheet before changing theme color to avoid crash
+            lambda checked: apply_stylesheet(self,theme="None")
+            self.config.add_or_update_entry(key="preferred_theme_type", value="style")
+            self.config.add_or_update_entry(key="style", value=theme)
+            self.app.setStyleSheet(theme)
+        
+    # Set initial theme depending on config file
     def set_initial_theme(self):
         preferred_theme_type = self.config.get_entry("preferred_theme_type")
 
         if preferred_theme_type == "style":
-            self.change_style(self.config.get_entry("style"))
+            self.change_theme(self.config.get_entry("style"), "style")
         elif preferred_theme_type == "color":
-            self.change_color(self.config.get_entry("color"))
+            self.change_theme(self.config.get_entry("color"), "color")
         else:
-            self.setStyleSheet(ADWAITA_DARK_STYLE)
+            self.app.setStyleSheet(ADWAITA_DARK_STYLE)
 
+    # Toggle menu bar visibility when the 'alt' key is pressed
     def keyPressEvent(self, event):
         # Check if the Alt key was pressed alone
         if event.key() == Qt.Key.Key_Alt:

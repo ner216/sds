@@ -117,7 +117,7 @@ class AddPasswordEntryDialog(QDialog):
         self.site_input = QLineEdit()
         self.user_input = QLineEdit()
         self.password_input = QLineEdit()
-        self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
+        self.password_input.setEchoMode(QLineEdit.EchoMode.Normal)
 
         self.form_layout.addRow("Website:", self.site_input)
         self.form_layout.addRow("Username:", self.user_input)

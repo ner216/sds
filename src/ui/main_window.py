@@ -78,15 +78,16 @@ class MainWindow(QMainWindow, QtStyleTools):
             action.triggered.connect(lambda checked, t=theme: self.change_theme(t, "color"))
             dark_mode.addAction(action)
 
-        style_mode = theme_menu.addMenu("Stylesheets")
+        style_mode = theme_menu.addMenu("Styles")
 
-        STYLE_LIST = [ ("Fusion-Dark", STYLES.get("Fusion-Dark")),
-                        ("Adwaita-Dark", STYLES.get("Adwaita-Dark"))
-                    ]
+        STYLE_LIST = [ 
+                    ("Fusion-Dark", STYLES.get("Fusion-Dark")),
+                    ("Adwaita-Dark", STYLES.get("Adwaita-Dark")),
+        ]
         
         for style_name, theme in STYLE_LIST:
             action = QAction(style_name, self)
-            action.triggered.connect(lambda checked, t=theme: self.change_theme(style_name, "style"))
+            action.triggered.connect(lambda checked, s=style_name: self.change_theme(s, "style"))
             style_mode.addAction(action)
 
         self.stack = QStackedWidget()
@@ -204,7 +205,7 @@ class MainWindow(QMainWindow, QtStyleTools):
         elif preferred_theme_type == "color":
             self.change_theme(self.config.get_entry("color"), "color")
         else:
-            self.app.setStyleSheet(STYLES.get("ADWAITA_DARK_STYLE"))
+            self.app.setStyleSheet(STYLES.get("Adwaita-Dark"))
 
     # Toggle menu bar visibility when the 'alt' key is pressed
     def keyPressEvent(self, event):

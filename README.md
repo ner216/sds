@@ -19,7 +19,7 @@ SDS is a simple, cross-platform password manager app written in Python. This app
 
 ### Install:
 
-Download the latest release executable from the 'releases' section [here](https://github.com/ner216/sds/releases/tag/general).
+Download the latest release executable/package from the 'releases' section [here](https://github.com/ner216/sds/releases/tag/general).
 
 ### Run Project in a Development Environment:
 
@@ -44,12 +44,13 @@ Download the latest release executable from the 'releases' section [here](https:
 2. Move into the `dist/` directory created by pyinstaller: `cd dist`
 3. Rename the built directory: `mv sds sds-<version>`
 4. Copy desktop file to the built directory: `cp ../packaging/sds.desktop sds-<version>`
-5. Create tarball and move to `rpmbuild` directory: 
+5. Create `rpmbuild` directory: `mkdir -p rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}`
+6. Create tarball in the `rpmbuild` directory: 
 `tar -czvf ~/rpmbuild/SOURCES/sds-<version>.tar.gz sds-<version>/`
-6. Copy the spec file to `rpmbuild`: `cp ../packaging/sds.spec ~/rpmbuild/SPECS/`
-7. Move to `rpmbuild`: `cd ~/rpmbuild`
-8. Build the package: `rpmbuild -bb SPECS/sds.spec`
-9. The newly created package will be located inside the `~/rpmbuild/RPMS/` directory.
+7. Copy the spec file to `rpmbuild`: `cp ../packaging/sds.spec ~/rpmbuild/SPECS/`
+8. Move to `rpmbuild`: `cd ~/rpmbuild`
+9. Build the package: `rpmbuild -bb SPECS/sds.spec`
+10. The newly created package will be located inside the `~/rpmbuild/RPMS/` directory.
     
 ### Project Map:
 

@@ -13,4 +13,5 @@ venv/
 Super_Duper_Secret.egg-info/
 build/
 main.spec
+sds.spec
 dist/

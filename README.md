@@ -21,6 +21,13 @@ SDS is a simple, cross-platform password manager app written in Python. This app
 
 Download the latest release executable/package from the 'releases' section [here](https://github.com/ner216/sds/releases/tag/general).
 
+### Uninstall:
+
+The program does create data folders when it is run. These are not deleted when the program is uninstalled. You can delete them with:
+
+- Linux: `rm -rI ~/.config/SuperDuperSecret`
+- Windows: remove the `C:\Users\<USERNAME>\AppData\Local\SuperDuperSecret` directory.
+
 ### Run Project in a Development Environment:
 
 1. Your Python version must be `>=3.13.0`
@@ -62,6 +69,9 @@ Download the latest release executable/package from the 'releases' section [here
     - `src/ui/` Contains the source code for the GUI and CLI.
     - `src/utils/` Contains code used to perform external operations like manage config files.
     - `src/main.py` Is the primary entry point (file that is executed to start the application).
+    
+### Known Issues:
+- CLI does not function on Windows as the program does not yet have a Windows installer.
 
 
 

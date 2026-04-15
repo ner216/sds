@@ -1,0 +1,17 @@
+# Text editor environments
+.vscode
+
+# Program cache
+__pycache__/
+
+# Environment data
+.env
+.venv/
+venv/
+
+# Project build data
+Super_Duper_Secret.egg-info/
+build/
+/main.spec
+/sds.spec
+dist/

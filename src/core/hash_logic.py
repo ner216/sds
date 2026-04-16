@@ -34,6 +34,7 @@ class Hash():
         """
         return hashlib.sha256(password.encode('utf-8')).digest()
 
+    # algorithm can be sha1, sha224, sha256, sha384, sha512, md5
     def get_file_hash(file_path: str, algorithm='sha256') -> str:
         file_path = Path(file_path)
         hash_object = hashlib.new(algorithm)

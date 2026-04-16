@@ -1,4 +1,17 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QScrollArea, QPushButton, QLabel, QDialog, QLineEdit, QFormLayout, QDialogButtonBox, QHBoxLayout, QStyle
+from PyQt6.QtWidgets import (
+    QWidget, 
+    QVBoxLayout, 
+    QScrollArea, 
+    QPushButton, 
+    QLabel, 
+    QDialog, 
+    QLineEdit, 
+    QFormLayout, 
+    QDialogButtonBox, 
+    QHBoxLayout, 
+    QStyle, 
+    QMessageBox
+)
 from PyQt6.QtCore import Qt, pyqtSignal
 
 class PasswordListWidget(QWidget):
@@ -50,9 +63,17 @@ class PasswordListWidget(QWidget):
             self.scroll_layout.addWidget(row)
 
     def delete_entry(self, entry_id):
-        self.db.delete_entry(entry_id)
+        reply = QMessageBox.question(
+            self, 
+            'Confirm Deletion', 
+            "Are you sure you want to delete this item? This action cannot be undone.",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No
+        )
 
-        self.refresh_list()
+        if reply == QMessageBox.StandardButton.Yes:
+            self.db.delete_entry(entry_id)
+            self.refresh_list()
 
     def add_entry_dialog(self):
         dialog = AddPasswordEntryDialog(self)

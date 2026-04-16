@@ -1,38 +1,27 @@
-"""
-Password hashing and authentication module using bcrypt.
-Provides secure password storage and verification for the password manager.
-"""
-
-import bcrypt
+from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 import os
 from pathlib import Path
 import hashlib
 
 class Hash():
+    # Derive a 256-bit key from password
+    # If salt is None, a new salt is generated
+    def derive_key(password: str, salt: bytes = None):
+        if salt is None:
+            # Generate 16 byte random salt
+            salt = os.urandom(16)
 
-    @staticmethod
-    def get_hashed_password(password: str) -> str:
-        """
-        Hash a password using bcrypt with salt.
+        kdf = Scrypt(
+            salt=salt,
+            length=32,      # We want a 32-byte (256-bit) key for AES-256
+            n=2**14,        # CPU/Memory cost (Increase to 2**15 or 2**16 for more security)
+            r=8,            # Block size
+            p=1             # Parallelization
+        )
+
+        key = kdf.derive(password.encode('utf-8'))
         
-        Args:
-            password: Plain text password to hash
-        
-        Returns:
-            Hashed password as string
-        """
-        salt = bcrypt.gensalt()
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
-        return hashed_password.decode('utf-8')
-
-    @staticmethod
-    def derive_key(password: str) -> bytes:
-        """
-        Derive a fixed 256-bit key from a plain text password.
-
-        This is used to encrypt/decrypt the password database.
-        """
-        return hashlib.sha256(password.encode('utf-8')).digest()
+        return key, salt
 
     # algorithm can be sha1, sha224, sha256, sha384, sha512, md5
     def get_file_hash(file_path: str, algorithm='sha256') -> str:

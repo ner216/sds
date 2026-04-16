@@ -2,6 +2,8 @@
 Password Database with RSA signature for integrity.
 """
 
+import traceback
+
 import json
 import os
 from pathlib import Path
@@ -12,13 +14,10 @@ from core.hash_logic import Hash
 class PasswordDB:
     def __init__(self, db_file_path: str, passphrase: str, verbose: bool = False):
         self.db_file = Path(db_file_path)
-        self.encryption_key = Hash.derive_key(passphrase)
+        self.passphrase = passphrase
         self.verbose = verbose
         self.password_locked = True
         self.entries = []
-
-    def get_encryption_key(self):
-        return self.encryption_key
 
     def load_db(self):
         self.entries = []
@@ -28,11 +27,12 @@ class PasswordDB:
         try:
             file_bytes = self.db_file.read_bytes()
 
-            # AES-GCM stores nonce(12 bytes) + ciphertext + authentication_tag(16 bytes fixed)
-            if self.encryption_key is not None and len(file_bytes) >= 28:
-                nonce = file_bytes[:12]
-                ciphertext = file_bytes[12:]
-                aesgcm = AESGCM(self.encryption_key)
+            if len(file_bytes) >= 44:
+                salt = file_bytes[0:16]
+                nonce = file_bytes[16:28]
+                ciphertext = file_bytes[28:]
+                encryption_key = Hash.derive_key(self.passphrase, salt)[0]
+                aesgcm = AESGCM(encryption_key)
                 clear = aesgcm.decrypt(nonce, ciphertext, None)
                 self.entries = json.loads(clear.decode('utf-8'))
 
@@ -41,31 +41,36 @@ class PasswordDB:
                 if self.verbose:
                     print(f"[INFO] Database decrypted and loaded successfully\n Path: {self.db_file}")
             else:
-                # fallback for non-encrypted source (legacy)
-                self.entries = json.loads(file_bytes.decode('utf-8'))
-
-                if self.verbose:
-                    print(f"[INFO] Unencrypted database loaded successfully\n Path: {self.db_file}")
+                raise Exception("[ERROR] File too small to contain necessary data.")
         except Exception as e:
-            raise Exception("Invalid password or file!")
+            if self.verbose:
+                print("-" * 30)
+                traceback.print_exc()
+                print("-" * 30)
+
             self.entries = []
+            raise Exception("Invalid password or file!")
 
     def save_db(self):
         try:
             payload = json.dumps(self.entries, indent=2, ensure_ascii=False)
             plaintext = payload.encode('utf-8')
 
-            if self.encryption_key is not None:
-                nonce = os.urandom(12)
-                aesgcm = AESGCM(self.encryption_key)
-                encrypted = nonce + aesgcm.encrypt(nonce, plaintext, None)
-                self.db_file.write_bytes(encrypted)
-            else:
-                self.db_file.write_bytes(plaintext)
+            key, salt = Hash.derive_key(self.passphrase)
+            nonce = os.urandom(12)
+            aesgcm = AESGCM(key)
+            encrypted = salt + nonce + aesgcm.encrypt(nonce, plaintext, None)
+            self.db_file.write_bytes(encrypted)
 
             return True
         except Exception as e:
             print(f"Error saving password DB: {e}")
+
+            if self.verbose:
+                print("-" * 30)
+                traceback.print_exc()
+                print("-" * 30)
+
             return False
 
     def get_entries(self):

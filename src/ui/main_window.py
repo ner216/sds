@@ -155,14 +155,20 @@ class MainWindow(QMainWindow, QtStyleTools):
             print(f"Error: Unable to create new safe!\n {e}")
             QMessageBox.information(self, "Error", "Unable to create new safe!")
 
-    def handle_verify_file(self, file_path: str, known_hash: str):
-        trimmed_known_hash = known_hash.removeprefix("sha256:")
-        calculated_hash = Hash.get_file_hash(file_path)
-        verified = (calculated_hash == trimmed_known_hash)
+    def handle_verify_file(self, file_path: str, known_hash: str, algorithm: str):
+        # Remove prefix from known_hash if present
+        prefixes = ["sha256:", "sha512:", "md5:"]
+        for p in prefixes:
+            if known_hash.startswith(p):
+                known_hash = known_hash.removeprefix(p)
+
+        calculated_hash = Hash.get_file_hash(file_path, algorithm)
+
+        verified = (calculated_hash == known_hash)
         if verified == True:
-            QMessageBox.information(self, "Success", f"File verified successfully!\nOriginal: {trimmed_known_hash}\nCalculated: {calculated_hash}")
+            QMessageBox.information(self, "Success", f"File verified successfully!\nOriginal: {known_hash}\nCalculated: {calculated_hash}")
         else:
-            QMessageBox.information(self, "Error", f"File hashes do not match; the file may be compromised!\nOriginal: {trimmed_known_hash}\nCalculated: {calculated_hash}")
+            QMessageBox.information(self, "Error", f"File hashes do not match; the file may be compromised!\nOriginal: {known_hash}\nCalculated: {calculated_hash}")
 
     def go_to_verify_file(self):
         self.stack.setCurrentWidget(self.verify_file)

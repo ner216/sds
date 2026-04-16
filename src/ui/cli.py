@@ -47,8 +47,10 @@ class CLI():
                     break
 
         if entry_to_delete is not None:
-            self.db.delete_entry(entry["id"])
-            print(f"[INFO] Deleted Password for {entry["site"]}")
+            confirm_delete = input(f"Confirm delete for {entry["site"]} (y/N) > ")
+            if confirm_delete.lower() == "y":
+                self.db.delete_entry(entry["id"])
+                print(f"[INFO] Deleted Password for {entry["site"]}")
         else:
             print(f"[INFO] Database does not contain an entry for {name_or_id}")
 

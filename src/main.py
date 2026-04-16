@@ -17,6 +17,7 @@ def main():
     parser.add_argument("-l", "--list", action="store_true", help="List saved password entries.")
     parser.add_argument("-i", "--interactive", action="store_true", help="Interactive mode to perform many actions in one login session.")
     parser.add_argument("--delete-config", action="store_true", help="Delete all config data created by SDS.")
+    parser.add_argument("--backup-safe", action="store_true", help="Backup the default safe as plain text.")
 
     args = parser.parse_args()
 
@@ -29,6 +30,8 @@ def main():
         CLI(default_safe_path).add_password()
     elif args.delete_config == True:
         SafeConfig().delete_all()
+    elif args.backup_safe == True:
+        CLI(default_safe_path).backup_entries()
     elif args.interactive == True:
         CLI(default_safe_path).interactive_mode()
     elif args.delete_password:

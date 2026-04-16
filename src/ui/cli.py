@@ -81,6 +81,22 @@ class CLI():
         for entry in self.db.get_entries():
             print(f"  {entry["id"]}: {entry["site"]}")
 
+    def backup_entries(self):
+        if self.db.password_locked: return
+
+        home_dir = Path.home()
+        backup_path = home_dir / f"{self.db_name}_backup.txt"
+
+        try:
+            with open(backup_path, "w", encoding="utf-8") as f:
+                for row in self.db.get_entries():
+                    f.write(str(row) + "\n")
+            print(f"Success! File created at: {backup_path}")
+        except PermissionError:
+            print(f"Error: You don't have permission to write to {home_dir}")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+
     def interactive_mode(self):
         if self.db.password_locked: return
         choice = ""

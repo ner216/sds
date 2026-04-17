@@ -15,7 +15,7 @@ STYLES = {
         QLineEdit, QTextEdit, QPlainTextEdit, QSpinBox {
             background-color: #1e1e1e;
             color: #ffffff;
-            border: 1px solid #101010;
+            border: 1px solid #454545;
             border-radius: 6px;
             padding: 8px;
             selection-background-color: #3584e4;
@@ -30,7 +30,7 @@ STYLES = {
         QPushButton {
             background-color: #303030;
             color: #ffffff;
-            border: 1px solid #101010;
+            border: 1px solid #454545;
             border-radius: 6px;
             padding: 8px 16px;
             min-height: 20px;
@@ -80,15 +80,43 @@ STYLES = {
 
         /* Combo Boxes (Dropdowns) */
         QComboBox {
-            background-color: #303030;
-            border: 1px solid #101010;
-            border-radius: 6px;
+            background-color: #353535; /* Matching the hamburger button elevation */
+            color: #ffffff;
+            border: 1px solid #454545;
+            border-radius: 10px;       /* Matching your 10px rounding */
             padding: 6px 12px;
+            min-width: 6em;
         }
 
+        QComboBox:hover {
+            background-color: #404040;
+            border: 1px solid #454545;
+        }
+
+        QComboBox:on { /* When the popup is open */
+            border-bottom-left-radius: 0px;
+            border-bottom-right-radius: 0px;
+            border: 2px solid #3584e4;
+            padding: 5px 11px; /* Adjust for border thickness */
+        }
+
+        /* The arrow button container */
         QComboBox::drop-down {
-            border: none;
-            width: 20px;
+            subcontrol-origin: padding;
+            width: 30px;
+            border-left-width: 0px; /* Remove internal line for a cleaner look */
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        /* The List View inside the combo box popup */
+        QComboBox QAbstractItemView {
+            background-color: #303030;
+            border: 1px solid #454545;
+            border-radius: 8px;
+            selection-background-color: #3584e4;
+            color: #ffffff;
+            outline: none;
         }
 
         /* Checkboxes */
@@ -147,6 +175,71 @@ STYLES = {
         QTabBar::tab:selected {
             border-bottom: 2px solid #3584e4;
             background: #353535;
+        }
+
+        QMenu {
+            background-color: #303030;
+            border: 1px solid #454545; /* Slightly lighter border looks more Adwaita */
+            border-radius: 10px;       /* Match modern GNOME 40+ curvature */
+            padding: 5px;
+            margin: 2px;               /* Important: gives space for the rounding to render */
+        }
+
+        QMenu::item {
+            background-color: transparent;
+            padding: 6px 24px;
+            border-radius: 6px; /* Adwaita uses rounded selection boxes */
+            color: #ffffff;
+        }
+
+        /* This provides the "Glow" / Feedback you were looking for */
+        QMenu::item:selected {
+            background-color: #3584e4; /* Adwaita Blue */
+            color: #ffffff;
+        }
+
+        QMenu::separator {
+            height: 1px;
+            background: #404040;
+            margin: 4px 8px;
+        }
+
+        /* Tool Button (The Hamburger menu) */
+        QToolButton {
+            background-color: transparent;
+            border-radius: 6px;
+            padding: 4px;
+        }
+
+        QToolButton:hover {
+            background-color: #3d3d3d; /* Feedback when hovering the hamburger icon */
+        }
+
+        QToolButton:pressed {
+            background-color: #242424;
+        }
+
+        /* Remove the arrow next to the hamburger icon if using setMenu() */
+        QToolButton::menu-indicator {
+            image: none;
+        }
+
+        /* The Hamburger Menu Button */
+        QToolButton {
+            background-color: #353535; /* Lighter than #242424 to prevent blending */
+            color: #ffffff;
+            border: 1px solid #454545;
+            border-radius: 10px; /* Matching the menu's curvature */
+            padding: 4px;
+        }
+
+        QToolButton:hover {
+            background-color: #404040; /* Feedback when the mouse is over it */
+            border: 1px solid #454545; /* Lighter border highlight */
+        }
+
+        QToolButton:pressed {
+            background-color: #1e1e1e; /* Darkens when clicked */
         }
         """
 }

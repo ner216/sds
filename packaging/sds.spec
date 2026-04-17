@@ -2,7 +2,7 @@
 %define _build_id_links none
 
 Name:           sds
-Version:        2.0.0
+Version:        2.5.0
 Release:        1%{?dist}
 Summary:        Self-contained SDS Application
 License:        MIT

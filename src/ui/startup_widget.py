@@ -7,10 +7,16 @@ from PyQt6.QtWidgets import (
     QHBoxLayout, 
     QToolButton, 
     QMenu,
-    QDialog
+    QDialog,
+    QCheckBox,
+    QComboBox,
+    QStyleFactory,
+    QApplication
 )
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction
+
+import __init__
 
 class StartupWidget(QWidget):
     def __init__(self, on_unlock, on_new, on_verify):
@@ -101,23 +107,59 @@ class StartupWidget(QWidget):
         self.on_verify()
 
     def open_settings(self):
-        pass
+        dialog = SettingsWindow(self)
+        dialog.exec()
 
     def open_about(self):
-        pass
+        dialog = AboutWindow(self)
+        dialog.exec()
 
 class SettingsWindow(QDialog):
     def __init__(self, parent=None):
         super(SettingsWindow, self).__init__()
+
+        # Get current application instance (used to set themes)
+        self.app = QApplication.instance()
+
         self.setWindowTitle("Settings")
-        self.setFixedWidth(350)
+        self.setFixedWidth(300)
 
         self.layout = QVBoxLayout(self)
+        self.layout.setContentsMargins(20, 20, 20, 20)
+
+        # Theme select row
+        self.theme_layout = QHBoxLayout()
+        self.theme_label = QLabel("Theme select:")
+        self.theme_box = QComboBox()
+        self.theme_box.addItems(QStyleFactory.keys())
+        self.theme_box.currentTextChanged.connect(self.set_theme)
+
+        self.theme_layout.addWidget(self.theme_label)
+        self.theme_layout.addWidget(self.theme_box)
+
+        # Set dark theme
+        self.dark_override_checkbox = QCheckBox("Force Dark Theme")
+
+        # Add to main layout
+        self.layout.addLayout(self.theme_layout)
+        self.layout.addWidget(self.dark_override_checkbox, alignment=Qt.AlignmentFlag.AlignHCenter)
+
+    def set_theme(self, theme):
+        self.app.setStyle(theme)
 
 class AboutWindow(QDialog):
     def __init__(self, parent=None):
         super(AboutWindow, self).__init__()
         self.setWindowTitle("About")
-        self.setFixedWidth(350)
+        self.setFixedWidth(300)
 
         self.layout = QVBoxLayout(self)
+        self.layout.setContentsMargins(20, 20, 20, 20)
+
+        full_name_label = QLabel("Super Duper Secret (SDS)")
+        version_label = QLabel(f"Version: {__init__.__version__}")
+        repo_label = QLabel("Repository: https://github.com/ner216/sds")
+
+        self.layout.addWidget(full_name_label)
+        self.layout.addWidget(version_label)
+        self.layout.addWidget(repo_label)

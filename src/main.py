@@ -1,5 +1,5 @@
 import sys
-from PyQt6.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication, QStyleFactory
 from ui.main_window import MainWindow
 import argparse
 
@@ -48,6 +48,9 @@ def main():
 
 def start_gui():
     app = QApplication(sys.argv)
+
+    print(QStyleFactory.keys())
+    app.setStyle("Fusion")
 
     window = MainWindow()
     window.show()

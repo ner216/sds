@@ -72,7 +72,6 @@ The program does create data folders when it is run. These are not deleted when 
     
 ### Known Issues:
 - CLI does not function on Windows as the program does not yet have a Windows installer.
-- Currently, file hash verification only supports SHA256.
 
 
 
